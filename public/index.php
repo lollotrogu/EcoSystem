@@ -30,3 +30,5 @@ $router->fallback(function(){
 
 // Dispatch
 $router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', $_SERVER['REQUEST_URI'] ?? '/');
+
+$router->get('/api/ping', [HomeController::class, 'ping']);

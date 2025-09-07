@@ -275,6 +275,20 @@ document.addEventListener("DOMContentLoaded", function () {
     termTitle.addEventListener("input", autoSave);
     termTitle.addEventListener("blur", autoSave);
   });
+
+  // Test API ping
+  fetch("/api/ping")
+    .then((r) => r.json())
+    .then((data) => {
+      console.log("PING OK:", data);
+      const s = document.getElementById("autoSaveStatus");
+      if (s) s.innerHTML = "✅ API ok";
+    })
+    .catch((err) => {
+      console.error("PING ERROR:", err);
+      const s = document.getElementById("autoSaveStatus");
+      if (s) s.innerHTML = "⚠️ API non raggiungibile";
+    });
 });
 
 // Gestione popup
