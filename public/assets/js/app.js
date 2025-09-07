@@ -23,60 +23,39 @@ const CARD_TITLES = {
 };
 
 /* ---------- Rilevamento base path (GitHub Pages vs locale) ---------- */
-// Su GitHub Pages (project site) l'URL è: https://<user>.github.io/<repo>/...
 const isGitHubPages = location.hostname.endsWith("github.io");
 const pathParts = location.pathname.split("/").filter(Boolean);
-// Se è un project site, il primo segmento è il nome repo (es. "EcoSystem")
 const REPO_BASE = isGitHubPages && pathParts.length > 0 ? `/${pathParts[0]}/` : "/";
-// cartella public/assets nel repo
-const ASSETS_BASE = `${REPO_BASE}public/assets/`;
-// posizione del glossario nel repo
-const GLOSSARIO_URL = `${ASSETS_BASE}data/glossario.json`;
 
-/* ---------- Stato ---------- */
-let popupData = {}; // dataset per colore (preso da glossario.json)
-let autoSaveTimeout = null;
-let imageLoaded = false;
+/* Punti base del progetto pubblicato */
+const PUBLIC_BASE   = `${REPO_BASE}public/`;
+const ASSETS_BASE   = `${PUBLIC_BASE}assets/`;
+const DATA_BASE     = `${ASSETS_BASE}data/`;
 
-/* ---------- Utils ---------- */
-function escapeHtml(s) {
-  return (s || "").replace(/[&<>"']/g, (m) =>
-    m === "&" ? "&amp;" : m === "<" ? "&lt;" : m === ">" ? "&gt;" : m === '"' ? "&quot;" : "&#39;"
-  );
-}
+/* URL assoluto del glossario (indipendente da pagina) */
+const GLOSSARIO_URL = new URL("glossario.json", new URL(DATA_BASE, location.origin)).toString();
 
-/** Risolve URL di asset (img/pdf ecc.) del JSON:
- *  - http(s) rimane invariato
- *  - "/assets/..." -> "/<repo>/public/assets/..."
- *  - "qualcosa.jpg" -> "/<repo>/public/assets/qualcosa.jpg"
- */
+/* ---------- Utils: risoluzione URL asset dal JSON ---------- */
 function assetUrl(p) {
   if (!p) return "";
   const s = String(p).trim();
   if (!s) return "";
-  if (/^https?:\/\//i.test(s)) return s; // assoluto esterno
+  if (/^https?:\/\//i.test(s)) return s; // URL esterno, tienilo così com'è
 
-  // togli eventuali slash iniziali
-  const clean = s.replace(/^\/+/, ""); // "assets/img/x.jpg" oppure "img/x.jpg" ecc.
-
-  if (clean.startsWith("assets/")) {
-    return `${REPO_BASE}public/${clean}`; // -> /<repo>/public/assets/...
+  // Caso 1: il JSON usa percorsi assoluti da /assets/...
+  if (s.startsWith("/assets/")) {
+    // su GitHub Pages serve il prefisso /<repo>/public/
+    return `${PUBLIC_BASE}${s.replace(/^\/+/, "")}`; // -> /<repo>/public/assets/...
   }
 
-  // fallback: forziamo sotto public/assets/
-  return `${ASSETS_BASE}${clean}`;
+  // Caso 2: qualunque altro relativo (es. "../img/xxx.jpg" oppure "img/xxx.jpg")
+  // Risolvo *relativamente* alla cartella del JSON: /public/assets/data/
+  const base = new URL(DATA_BASE, location.origin);
+  const resolved = new URL(s, base);
+  // Ritorno path relativo all'host (va bene sia in locale che su Pages)
+  return resolved.pathname + resolved.search + resolved.hash;
 }
 
-async function fetchJSON(url) {
-  try {
-    const r = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!r.ok) throw new Error(`HTTP ${r.status}`);
-    return await r.json();
-  } catch (e) {
-    console.warn("fetchJSON error:", url, e);
-    return null;
-  }
-}
 
 /* ---------- Persistenza minima locale (titoli pagina e card) ---------- */
 function autoSave() {
