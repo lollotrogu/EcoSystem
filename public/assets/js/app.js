@@ -24,14 +24,11 @@ const CARD_TITLES = {
 /* ---------- Rilevamento base path (GitHub Pages vs locale) ---------- */
 const isGitHubPages = location.hostname.endsWith("github.io");
 const pathParts = location.pathname.split("/").filter(Boolean);
-// es: /username.github.io/EcoSystem/frontend/home.html -> repoBase = "/EcoSystem/"
-const REPO_BASE = isGitHubPages && pathParts.length > 0 ? `/${pathParts[0]}/` : "/";
-
-/* Punti base del progetto pubblicato */
-const PUBLIC_BASE = `${REPO_BASE}public/`;          // "/EcoSystem/public/"  oppure "/public/"
-const ASSETS_BASE = `${PUBLIC_BASE}assets/`;        // ".../public/assets/"
-const DATA_BASE   = `${ASSETS_BASE}data/`;          // ".../public/assets/data/"
-
+const REPO_BASE  = location.hostname.endsWith("github.io") && location.pathname.split("/").filter(Boolean).length > 0
+                  ? `/${location.pathname.split("/").filter(Boolean)[0]}/` : "/";
+const PUBLIC_BASE = `${REPO_BASE}public/`;
+const ASSETS_BASE = `${PUBLIC_BASE}assets/`;
+const DATA_BASE   = `${ASSETS_BASE}data/`;
 /* URL assoluto del glossario (indipendente da pagina) */
 const GLOSSARIO_URL = new URL("glossario.json", new URL(DATA_BASE, location.origin)).toString();
 
@@ -68,20 +65,41 @@ async function fetchJSON(url) {
  */
 function assetUrl(p) {
   if (!p) return "";
-  const s = String(p).trim();
-  if (!s) return "";
-  if (/^https?:\/\//i.test(s)) return s;
+  const raw = String(p).trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw;
 
-  if (s.startsWith("/assets/")) {
-    // es: "/assets/img/automata.jpg" -> "/<repo>/public/assets/img/automata.jpg"
-    return `${PUBLIC_BASE}${s.replace(/^\/+/, "")}`;
+  // normalizza eventuale "./"
+  let s = raw.replace(/^\.\//, "");
+
+  // --- scorciatoie esplicite per cartelle comuni del JSON ---
+  // img -> /public/assets/img/...
+  if (/^(\.\.\/)*img\//i.test(s) || s.startsWith("/img/")) {
+    const rest = s
+      .replace(/^(\.\.\/)*/i, "")     // rimuovi ../ multipli
+      .replace(/^\/?img\//i, "img/"); // normalizza prefisso
+    return `${ASSETS_BASE}${rest}`;   // ASSETS_BASE = "<repo>/public/assets/"
   }
 
-  // "../img/automata.jpg" o "img/automata.jpg" ecc.: relativo alla cartella del JSON
-  const base = new URL(DATA_BASE, location.origin);
-  const resolved = new URL(s, base);
-  return resolved.pathname + resolved.search + resolved.hash;
+  // pdf -> /public/assets/pdf/...
+  if (/^(\.\.\/)*pdf\//i.test(s) || s.startsWith("/pdf/")) {
+    const rest = s
+      .replace(/^(\.\.\/)*/i, "")
+      .replace(/^\/?pdf\//i, "pdf/");
+    return `${ASSETS_BASE}${rest}`;
+  }
+
+  // già scritto come "/assets/..."
+  if (s.startsWith("/assets/")) {
+    return `${PUBLIC_BASE}${s.replace(/^\/+/, "")}`; // -> "<repo>/public/assets/..."
+  }
+
+  // fallback: risolvi rispetto alla cartella del JSON (/public/assets/data/)
+  const base = new URL(DATA_BASE, location.origin);  // DATA_BASE = "<repo>/public/assets/data/"
+  const u = new URL(s, base);
+  return u.pathname + u.search + u.hash;
 }
+
 
 /* ---------- Persistenza minima locale (titoli pagina e card) ---------- */
 function autoSave() {
