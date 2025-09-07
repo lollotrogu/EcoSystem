@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--SE VUOI MODIFICARE IL TITOLO DEVI MODIFICARE IL TESTO CHE STA TRA <title></title>-->
+    <title>
+        EcosiStem - Glossario Interattivo
+    </title>
+    <link rel="stylesheet" href="../public/assets/css/stylesheet.css">
+    <script src="../public/assets/js/app.js" defer></script>
+
+</head>
+<body>
+    <div class="container">
+        
+        <div class="header">
+            <h1 class="title" contenteditable="true">EcosiStem</h1>
+            <p class="subtitle" contenteditable="true">Glossario interattivo per l'educazione STEM e digitale moderna</p>
+        </div>
+
+        
+            <div class="image-container" id="imageContainer" style="margin-top:30px; margin-bottom:30px;">
+                
+                    <img id="mainImage" class="main-image" alt="Immagine interattiva" src="DA CARICARE INGRANDITA.png">
+                    
+                    <div class="image-controls">
+                        <button class="control-btn" onclick="openFullscreen()" title="Visualizza a schermo intero">🔍</button>
+                    </div>
+            </div>
+        
+
+        
+
+        <div class="search-section">
+            <input type="text" class="search-bar" placeholder="🔍 Cerca un termine nel glossario..." id="searchInput">
+            <div style="text-align: center; margin-top: 15px;" id="autoSaveStatus">
+                <input type="file" id="replaceImageInput" accept="image/*" style="display: none;">
+            </div>
+        </div>
+
+        <div class="terms-section">
+            <div class="terms-grid" id="termsGrid">
+                <div class="term-card red" onclick="showPopups('red')">
+                    <h3 class="term-title" contenteditable="true">Tinkering - elettronica educativa</h3>
+                </div>
+                
+                <div class="term-card purple" onclick="showPopups('purple')">
+                    <h3 class="term-title" contenteditable="true">Coding</h3>
+                </div>
+                
+                <div class="term-card blue" onclick="showPopups('blue')">
+                    <h3 class="term-title" contenteditable="true">Robotica</h3>
+                </div>
+                
+                <div class="term-card green" onclick="showPopups('green')">
+                    <h3 class="term-title" contenteditable="true">Immersività</h3>
+                </div>
+                
+                <div class="term-card orange" onclick="showPopups('orange')">
+                    <h3 class="term-title" contenteditable="true">Modellazione 3D</h3>
+                </div>
+                
+                <div class="term-card yellow" onclick="showPopups('yellow')">
+                    <h3 class="term-title" contenteditable="true">Cittadinanza Digitale</h3>
+                </div>
+            </div>
+
+            <div class="popup-container" id="popupContainer">
+                <!-- I popup verranno generati dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay per visualizzazione a schermo intero -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay" onclick="closeFullscreen()">
+        <img id="fullscreenImage" class="fullscreen-image" alt="Immagine a schermo intero">
+        <button class="fullscreen-close" onclick="closeFullscreen()" title="Chiudi">✕</button>
+    </div>
+
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'979ee6a4e51eee78',t:'MTc1NzAwMzczNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

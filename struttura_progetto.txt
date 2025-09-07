@@ -1,0 +1,22 @@
+#STRUTTURA DEL PROGETTO
+Ecosystem/
+├─ docker/
+│  ├─ vhost.conf ok 
+│  └─ php.ini ok 
+├─ docker-compose.yml ok
+├─ Dockerfile ok 
+├─ public/
+│  ├─ .htaccess ok
+│  └─ index.php ok 
+├─ app/
+│  ├─ Core/
+│  │  ├─ Router.php ok
+│  │  └─ Controller.php ok 
+│  ├─ Controllers/
+│  │  └─ HomeController.php ok 
+│  ├─ Models/ ok 
+│  └─ Views/
+│     └─ home.php ok
+├─ frontend/
+│  └─ home.html   ← (il tuo file attuale) ok 
+└─ backend/

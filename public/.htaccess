@@ -1,0 +1,8 @@
+RewriteEngine On
+RewriteBase /
+# serve direttamente file/esistenti
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+# tutto il resto passa a index.php
+RewriteRule ^ index.php [QSA,L]

@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    # In sviluppo puoi montare il codice per hot-reload;
+    # in produzione evita i volumi e usa solo la COPY del Dockerfile.
+    volumes:
+      - ./:/var/www/html
+    restart: unless-stopped
