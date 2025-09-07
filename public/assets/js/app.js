@@ -1,367 +1,10 @@
-// Variabili globali per immagine
-let imageLoaded = false;
-let autoSaveTimeout = null;
-let imageFitMode = "contain"; // 'cover' o 'contain'
+/* =========================================================
+   EcosiSTEM - Frontend JS (cards + popup con dataset fisso)
+   ========================================================= */
 
-// Funzione di salvataggio automatico
-function autoSave() {
-  clearTimeout(autoSaveTimeout);
-  autoSaveTimeout = setTimeout(() => {
-    const termTitles = {};
-    document.querySelectorAll(".term-card").forEach((card) => {
-      const color = card.className
-        .split(" ")
-        .find((c) =>
-          ["red", "purple", "blue", "green", "orange", "yellow"].includes(c)
-        );
-      const title = card.querySelector(".term-title").textContent;
-      termTitles[color] = title;
-    });
-
-    const glossaryData = {
-      title: document.querySelector(".title").textContent,
-      subtitle: document.querySelector(".subtitle").textContent,
-      termTitles: termTitles,
-      popupData: popupData,
-      timestamp: new Date().toISOString(),
-    };
-
-    // Salva nel localStorage
-    try {
-      localStorage.setItem("ecosistem_glossary", JSON.stringify(glossaryData));
-
-      // Mostra feedback visivo
-      const status = document.getElementById("autoSaveStatus");
-      const originalText = status.innerHTML;
-      status.innerHTML = "✅ Salvato automaticamente";
-      status.style.color = "#28a745";
-      setTimeout(() => {
-        status.innerHTML = originalText;
-        status.style.color = "#666";
-      }, 2000);
-    } catch (error) {
-      console.warn("Errore nel salvataggio:", error);
-    }
-  }, 1000);
-}
-
-// Carica automaticamente i dati salvati all'avvio
-function loadAutoSavedData() {
-  const savedData = localStorage.getItem("ecosistem_glossary");
-  if (savedData) {
-    try {
-      const glossaryData = JSON.parse(savedData);
-
-      if (glossaryData.title) {
-        document.querySelector(".title").textContent = glossaryData.title;
-      }
-      if (glossaryData.subtitle) {
-        document.querySelector(".subtitle").textContent = glossaryData.subtitle;
-      }
-      if (glossaryData.termTitles) {
-        Object.keys(glossaryData.termTitles).forEach((color) => {
-          const card = document.querySelector(`.term-card.${color}`);
-          if (card) {
-            card.querySelector(".term-title").textContent =
-              glossaryData.termTitles[color];
-          }
-        });
-      }
-      if (glossaryData.popupData) {
-        Object.assign(popupData, glossaryData.popupData);
-      }
-    } catch (error) {
-      console.log("Errore nel caricamento dei dati salvati:", error);
-    }
-  }
-
-  // Carica l'immagine principale salvata
-  const savedImage = localStorage.getItem("ecosistem_main_image");
-  if (savedImage) {
-    try {
-      loadImageFromData(savedImage);
-    } catch (error) {
-      console.log("Errore nel caricamento dell'immagine salvata:", error);
-      localStorage.removeItem("ecosistem_main_image");
-    }
-  }
-}
-
-// Funzione per caricare immagine da dati base64
-function loadImageFromData(imageData) {
-  const img = document.getElementById("mainImage");
-  const loadingIndicator = document.getElementById("loadingIndicator");
-
-  loadingIndicator.classList.add("active");
-
-  // Crea una nuova immagine per testare il caricamento
-  const testImg = new Image();
-  testImg.onload = function () {
-    img.src = imageData;
-    document.getElementById("imageUpload").style.display = "none";
-    document.getElementById("imageViewer").classList.add("active");
-    imageLoaded = true;
-    loadingIndicator.classList.remove("active");
-  };
-
-  testImg.onerror = function () {
-    console.error("Errore nel caricamento dell'immagine salvata");
-    localStorage.removeItem("ecosistem_main_image");
-    loadingIndicator.classList.remove("active");
-  };
-
-  testImg.src = imageData;
-}
-
-// Gestione caricamento immagine migliorata
-document.getElementById("imageInput").addEventListener("change", function (e) {
-  const file = e.target.files[0];
-  if (file) {
-    // Validazione del file
-    if (!file.type.startsWith("image/")) {
-      alert(
-        "Per favore seleziona un file immagine valido (JPG, PNG, GIF, etc.)."
-      );
-      return;
-    }
-
-    // Limite dimensione file (5MB per compatibilità localStorage)
-    if (file.size > 5 * 1024 * 1024) {
-      alert(
-        "Il file è troppo grande. Massimo 5MB per garantire la compatibilità."
-      );
-      return;
-    }
-
-    const loadingIndicator = document.getElementById("loadingIndicator");
-    loadingIndicator.classList.add("active");
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      try {
-        const imageData = e.target.result;
-
-        // Crea una nuova immagine per testare il caricamento
-        const testImg = new Image();
-        testImg.onload = function () {
-          // Se l'immagine si carica correttamente, mostrala
-          const img = document.getElementById("mainImage");
-          img.src = imageData;
-          document.getElementById("imageUpload").style.display = "none";
-          document.getElementById("imageViewer").classList.add("active");
-          imageLoaded = true;
-          loadingIndicator.classList.remove("active");
-
-          // Salva l'immagine nel localStorage per persistenza
-          try {
-            localStorage.setItem("ecosistem_main_image", imageData);
-          } catch (storageError) {
-            console.warn(
-              "Impossibile salvare l'immagine nel localStorage (troppo grande):",
-              storageError
-            );
-            alert(
-              "Immagine caricata ma non salvata automaticamente (troppo grande per il browser)."
-            );
-          }
-        };
-
-        testImg.onerror = function () {
-          loadingIndicator.classList.remove("active");
-          alert(
-            "Errore nel caricamento dell'immagine. Il file potrebbe essere corrotto."
-          );
-        };
-
-        testImg.src = imageData;
-      } catch (error) {
-        loadingIndicator.classList.remove("active");
-        console.error("Errore nel processamento dell'immagine:", error);
-        alert(
-          "Errore nel caricamento dell'immagine. Prova con un file diverso."
-        );
-      }
-    };
-
-    reader.onerror = function () {
-      loadingIndicator.classList.remove("active");
-      alert("Errore nella lettura del file.");
-    };
-
-    reader.readAsDataURL(file);
-  }
-});
-
-// Funzione per cambiare modalità di visualizzazione immagine
-function toggleImageFit() {
-  const img = document.getElementById("mainImage");
-  const toggleBtn = document.getElementById("fitToggle");
-
-  if (imageFitMode === "contain") {
-    imageFitMode = "cover";
-    img.style.objectFit = "cover";
-    toggleBtn.textContent = "📐";
-    toggleBtn.title = "Modalità: Riempie spazio - Clicca per immagine completa";
-  } else {
-    imageFitMode = "contain";
-    img.style.objectFit = "contain";
-    toggleBtn.textContent = "🖼️";
-    toggleBtn.title = "Modalità: Immagine completa - Clicca per riempire";
-  }
-}
-
-// Funzioni per visualizzazione a schermo intero
-function openFullscreen() {
-  if (!imageLoaded) return;
-
-  const mainImg = document.getElementById("mainImage");
-  const fullscreenImg = document.getElementById("fullscreenImage");
-  const overlay = document.getElementById("fullscreenOverlay");
-
-  fullscreenImg.src = mainImg.src;
-  overlay.classList.add("active");
-
-  // Previeni lo scroll del body
-  document.body.style.overflow = "hidden";
-}
-
-function closeFullscreen() {
-  const overlay = document.getElementById("fullscreenOverlay");
-  overlay.classList.remove("active");
-
-  // Ripristina lo scroll del body
-  document.body.style.overflow = "auto";
-}
-
-// Chiudi con tasto ESC
-document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape") {
-    closeFullscreen();
-    // Chiudi anche tutti i menu popup aperti
-    document.querySelectorAll(".popup-menu-dropdown.active").forEach((menu) => {
-      menu.classList.remove("active");
-    });
-  }
-});
-
-// Chiudi menu quando si clicca fuori
-document.addEventListener("click", function (e) {
-  if (!e.target.closest(".popup-menu")) {
-    document.querySelectorAll(".popup-menu-dropdown.active").forEach((menu) => {
-      menu.classList.remove("active");
-    });
-  }
-});
-
-// Aggiungi click sull'immagine principale per aprire fullscreen
-document.addEventListener("DOMContentLoaded", function () {
-  const mainImage = document.getElementById("mainImage");
-  mainImage.addEventListener("click", openFullscreen);
-
-  // Carica i dati salvati automaticamente
-  loadAutoSavedData();
-
-  // Aggiungi listener per il salvataggio automatico sui titoli modificabili
-  const title = document.querySelector(".title");
-  const subtitle = document.querySelector(".subtitle");
-
-  title.addEventListener("input", autoSave);
-  title.addEventListener("blur", autoSave);
-  subtitle.addEventListener("input", autoSave);
-  subtitle.addEventListener("blur", autoSave);
-
-  // Aggiungi listener per i titoli delle card
-  document.querySelectorAll(".term-title").forEach((termTitle) => {
-    termTitle.addEventListener("input", autoSave);
-    termTitle.addEventListener("blur", autoSave);
-  });
-
-  // Test API ping
-  fetch("/api/ping")
-    .then((r) => r.json())
-    .then((data) => {
-      console.log("PING OK:", data);
-      const s = document.getElementById("autoSaveStatus");
-      if (s) s.innerHTML = "✅ API ok";
-    })
-    .catch((err) => {
-      console.error("PING ERROR:", err);
-      const s = document.getElementById("autoSaveStatus");
-      if (s) s.innerHTML = "⚠️ API non raggiungibile";
-    });
-});
-
-// Gestione popup
-const popupData = {
-  red: Array(10)
-    .fill()
-    .map((_, i) => ({
-      id: `red_${i}`,
-      title: `Concetto AI ${i + 1}`,
-      description: "",
-      link: "",
-      image: null,
-      active: true,
-      ageTags: [],
-    })),
-  purple: Array(10)
-    .fill()
-    .map((_, i) => ({
-      id: `purple_${i}`,
-      title: `Robot ${i + 1}`,
-      description: "",
-      link: "",
-      image: null,
-      active: true,
-      ageTags: [],
-    })),
-  blue: Array(10)
-    .fill()
-    .map((_, i) => ({
-      id: `blue_${i}`,
-      title: `Codice ${i + 1}`,
-      description: "",
-      link: "",
-      image: null,
-      active: true,
-      ageTags: [],
-    })),
-  green: Array(10)
-    .fill()
-    .map((_, i) => ({
-      id: `green_${i}`,
-      title: `Formula ${i + 1}`,
-      description: "",
-      link: "",
-      image: null,
-      active: true,
-      ageTags: [],
-    })),
-  orange: Array(10)
-    .fill()
-    .map((_, i) => ({
-      id: `orange_${i}`,
-      title: `Progetto ${i + 1}`,
-      description: "",
-      link: "",
-      image: null,
-      active: true,
-      ageTags: [],
-    })),
-  yellow: Array(10)
-    .fill()
-    .map((_, i) => ({
-      id: `yellow_${i}`,
-      title: `Esperimento ${i + 1}`,
-      description: "",
-      link: "",
-      image: null,
-      active: true,
-      ageTags: [],
-    })),
-};
-
-const colorMap = {
+/* ---------- Config ---------- */
+const COLORS = ["red", "purple", "blue", "green", "orange", "yellow"];
+const COLOR_HEX = {
   red: "#ff0000",
   purple: "#8c52ff",
   blue: "#38b6ff",
@@ -369,446 +12,348 @@ const colorMap = {
   orange: "#ff914d",
   yellow: "#ffff00",
 };
+const CARD_TITLES = {
+  red: "Tinkering - elettronica educativa",
+  purple: "Coding",
+  blue: "Robotica",
+  green: "Immersività",
+  orange: "Modellazione 3D",
+  yellow: "Cittadinanza Digitale",
+};
 
-function showPopups(color) {
-  const container = document.getElementById("popupContainer");
-  container.innerHTML = "";
+/* ---------- Stato ---------- */
+let popupData = {}; // dataset per colore (preso da glossario.json)
+let autoSaveTimeout = null;
+let imageLoaded = false;
 
-  // Chiudi tutti gli altri popup
-  container.classList.remove("active");
+/* ---------- Utils ---------- */
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, (m) =>
+    m === "&" ? "&amp;" :
+    m === "<" ? "&lt;" :
+    m === ">" ? "&gt;" :
+    m === '"' ? "&quot;" : "&#39;"
+  );
+}
 
-  setTimeout(() => {
-    popupData[color].forEach((popup, index) => {
-      const popupElement = createPopupElement(popup, color, index);
-      container.appendChild(popupElement);
+async function fetchJSON(url) {
+  try {
+    const r = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } catch (e) {
+    console.warn("fetchJSON error:", url, e);
+    return null;
+  }
+}
+
+/* Forza path servibile dagli asset pubblici */
+function resolveAssetPath(p) {
+  if (!p) return "";
+  const s = String(p).trim();
+  if (!s) return "";
+  if (/^https?:\/\//i.test(s)) return s;         // URL assoluto
+  if (s.startsWith("/")) return s;                // già assoluto dal root del vhost
+  // rimuove eventuale prefisso "public/" o "./"
+  return "/" + s.replace(/^(\.\/|public\/)/, "");
+}
+
+/* ---------- Persistenza minima locale (titoli pagina e card) ---------- */
+function autoSave() {
+  clearTimeout(autoSaveTimeout);
+  autoSaveTimeout = setTimeout(() => {
+    const termTitles = {};
+    document.querySelectorAll(".term-card").forEach((card) => {
+      const color = COLORS.find((c) => card.classList.contains(c));
+      const titleEl = card.querySelector(".term-title");
+      if (color && titleEl) termTitles[color] = titleEl.textContent;
     });
-
-    // Aggiungi il pulsante per aggiungere nuovi popup
-    const addButton = document.createElement("div");
-    addButton.className = "add-popup-btn";
-    addButton.innerHTML = "+";
-    addButton.title = "Aggiungi nuovo popup";
-    addButton.onclick = () => addNewPopup(color);
-    container.appendChild(addButton);
-
-    container.classList.add("active");
-  }, 100);
+    const data = {
+      title: document.querySelector(".title")?.textContent || "",
+      subtitle: document.querySelector(".subtitle")?.textContent || "",
+      termTitles,
+      ts: Date.now(),
+    };
+    try {
+      localStorage.setItem("ecosistem_glossary_local", JSON.stringify(data));
+      const s = document.getElementById("autoSaveStatus");
+      if (s) {
+        const o = s.innerHTML;
+        s.innerHTML = "✅ Salvato automaticamente";
+        s.style.color = "#28a745";
+        setTimeout(() => {
+          s.innerHTML = o;
+          s.style.color = "#666";
+        }, 1200);
+      }
+    } catch (_) {}
+  }, 500);
 }
 
-function addNewPopup(color) {
-  const newIndex = popupData[color].length;
-  const newPopup = {
-    id: `${color}_${newIndex}`,
-    title: `Nuovo ${
-      color === "red"
-        ? "Concetto AI"
-        : color === "purple"
-        ? "Robot"
-        : color === "blue"
-        ? "Codice"
-        : color === "green"
-        ? "Formula"
-        : color === "orange"
-        ? "Progetto"
-        : "Esperimento"
-    } ${newIndex + 1}`,
-    description: "",
-    link: "",
-    image: null,
-    active: true,
-    ageTags: [],
-  };
-
-  popupData[color].push(newPopup);
-
-  // Ricarica i popup per mostrare il nuovo
-  showPopups(color);
-  autoSave();
+function loadLocal() {
+  const saved = localStorage.getItem("ecosistem_glossary_local");
+  if (!saved) return;
+  try {
+    const data = JSON.parse(saved);
+    if (data.title) document.querySelector(".title").textContent = data.title;
+    if (data.subtitle) document.querySelector(".subtitle").textContent = data.subtitle;
+    if (data.termTitles) {
+      Object.entries(data.termTitles).forEach(([color, t]) => {
+        const el = document.querySelector(`.term-card.${color} .term-title`);
+        if (el) el.textContent = t;
+      });
+    }
+  } catch (_) {}
 }
 
-function createPopupElement(popup, color, index) {
+/* ---------- Caricamento dataset fisso (SOLO dal JSON) ---------- */
+function sanitizeDataset(ds) {
+  const clean = {};
+  COLORS.forEach((c) => {
+    const arr = Array.isArray(ds?.[c]) ? ds[c] : [];
+    clean[c] = arr.map((it, idx) => {
+      const item = { ...it };
+      // normalizza campi base
+      item.title = typeof item.title === "string" ? item.title : "";
+      item.description = typeof item.description === "string" ? item.description : "";
+      item.link = typeof item.link === "string" ? item.link : "";
+      item.image = typeof item.image === "string" ? item.image : "";
+      item.ageTags = Array.isArray(item.ageTags) ? item.ageTags : [];
+      item.id = item.id || `${c}_${idx}`;
+      return item;
+    });
+  });
+  return clean;
+}
+
+async function loadFixedDataset() {
+  const json = await fetchJSON("/assets/data/glossario.json?v=2");
+  if (json) {
+    popupData = sanitizeDataset(json);
+    try {
+      localStorage.setItem("ecosistem_glossario_fixed", JSON.stringify(popupData));
+    } catch (_) {}
+    console.log("Dataset caricato. Colori:", Object.keys(popupData));
+    return;
+  }
+  // fallback da cache
+  const cached = localStorage.getItem("ecosistem_glossario_fixed");
+  if (cached) {
+    popupData = sanitizeDataset(JSON.parse(cached));
+    console.log("Dataset da cache. Colori:", Object.keys(popupData));
+    return;
+  }
+  // fallback estremo
+  popupData = Object.fromEntries(COLORS.map((c) => [c, []]));
+  console.warn("Dataset vuoto: verifica /assets/data/glossario.json");
+}
+
+/* ---------- Fullscreen immagine principale ---------- */
+function openFullscreen() {
+  const img = document.getElementById("mainImage");
+  if (!img || !img.getAttribute("src")) return;
+  const overlay = document.getElementById("fullscreenOverlay");
+  const full = document.getElementById("fullscreenImage");
+  if (!overlay || !full) return;
+  full.src = img.src;
+  overlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+function closeFullscreen() {
+  const overlay = document.getElementById("fullscreenOverlay");
+  if (!overlay) return;
+  overlay.classList.remove("active");
+  document.body.style.overflow = "auto";
+}
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeFullscreen();
+});
+
+/* ---------- Cards (macro categorie) ---------- */
+function createTermCard(color, title) {
+  const div = document.createElement("div");
+  div.className = `term-card ${color}`;
+  div.innerHTML = `<h3 class="term-title">${escapeHtml(title)}</h3>`;
+  div.addEventListener("click", () => showPopups(color));
+  return div;
+}
+function renderTermsGrid() {
+  const grid = document.getElementById("termsGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  COLORS.forEach((c) =>
+    grid.appendChild(createTermCard(c, CARD_TITLES[c] || c))
+  );
+  grid.querySelectorAll(".term-title").forEach((el) => {
+    el.addEventListener("input", autoSave);
+    el.addEventListener("blur", autoSave);
+  });
+}
+
+/* ---------- Popup (contenuto fisso dal JSON) ---------- */
+function createPopupElement(p, color, index) {
   const div = document.createElement("div");
   div.className = "popup";
-  div.setAttribute("data-popup", `${color}-${index}`);
-  div.style.borderColor = colorMap[color];
+  div.dataset.popup = `${color}-${index}`;
+  div.style.borderColor = COLOR_HEX[color];
 
-  // Modalità modifica - elementi interattivi
+  // risolvi path immagine (relativo → assoluto) e aggiungi onerror
+  const imgSrc = resolveAssetPath(p.image);
+  const imgHtml = imgSrc
+    ? `<img src="${imgSrc}" alt="Immagine popup"
+         onerror="console.warn('Immagine non trovata:', this.src); this.onerror=null; this.style.display='none';">`
+    : "";
+
   div.innerHTML = `
-                <div class="popup-header" style="background: ${
-                  colorMap[color]
-                }; margin: -20px -20px 15px -20px; padding: 15px 20px; border-radius: 10px 10px 0 0;">
-                    <input type="text" class="popup-title" value="${
-                      popup.title
-                    }" 
-                           onchange="updatePopupData('${color}', ${index}, 'title', this.value)"
-                           style="background: transparent; border: none; color: ${
-                             color === "yellow" ? "#333" : "white"
-                           }; font-weight: 600; font-size: 1.1rem; width: 100%; outline: none;">
-                </div>
-                
-                <div class="popup-image" onclick="this.querySelector('input').click()">
-                    ${
-                      popup.image
-                        ? `<img src="${popup.image}" alt="Popup image">`
-                        : "📷 Carica immagine"
-                    }
-                    <input type="file" accept="image/*" onchange="loadPopupImage('${color}', ${index}, this)">
-                </div>
-                
-                <div class="popup-description">
-                    <textarea placeholder="Descrizione (max 500 caratteri)" maxlength="500" 
-                              onchange="updatePopupData('${color}', ${index}, 'description', this.value)">${
-    popup.description
-  }</textarea>
-                </div>
-                
-                <div class="popup-link">
-                    <input type="url" placeholder="Inserisci URL per il pulsante approfondimento" value="${
-                      popup.link
-                    }"
-                           onchange="updatePopupData('${color}', ${index}, 'link', this.value)" 
-                           style="margin-bottom: 10px; font-size: 0.85rem;">
-                    <div class="cta-button ${
-                      popup.link ? `active ${color}` : "inactive"
-                    }" 
-                         onclick="openLink('${color}', ${index})"
-                         ${
-                           popup.link
-                             ? `title="Vai a: ${popup.link}"`
-                             : 'title="Inserisci un URL per attivare il pulsante"'
-                         }>
-                        <span class="cta-text">Per approfondire</span>
-                        <span class="cta-arrow">→</span>
-                    </div>
-                </div>
-                
-                <div class="age-tags">
-                    <div class="age-tag infanzia ${
-                      popup.ageTags.includes("infanzia") ? "selected" : ""
-                    }" 
-                         onclick="toggleAgeTag('${color}', ${index}, 'infanzia', this)">
-                        🧸 Infanzia
-                    </div>
-                    <div class="age-tag primaria ${
-                      popup.ageTags.includes("primaria") ? "selected" : ""
-                    }" 
-                         onclick="toggleAgeTag('${color}', ${index}, 'primaria', this)">
-                        📚 Primaria
-                    </div>
-                    <div class="age-tag secondaria ${
-                      popup.ageTags.includes("secondaria") ? "selected" : ""
-                    }" 
-                         onclick="toggleAgeTag('${color}', ${index}, 'secondaria', this)">
-                        🎓 Secondaria
-                    </div>
-                </div>
-                
-                <div class="popup-menu">
-                    <button class="popup-menu-btn" onclick="togglePopupMenu('${color}', ${index})" title="Opzioni popup">
-                        ⋮
-                    </button>
-                    <div class="popup-menu-dropdown" id="menu-${color}-${index}">
-                        <div class="menu-item" onclick="duplicatePopup('${color}', ${index})">
-                            📋 Duplica
-                        </div>
-                        <div class="menu-item delete-item" onclick="confirmDeletePopup('${color}', ${index})">
-                            🗑️ Elimina
-                        </div>
-                    </div>
-                </div>
-            `;
+    <div class="popup-header" style="background:${COLOR_HEX[color]};
+         margin:-20px -20px 15px -20px; padding:14px 18px; border-radius:10px 10px 0 0;">
+      <h3 class="popup-title" style="margin:0; color:${color === "yellow" ? "#333" : "#fff"}; font-weight:600; font-size:1.05rem;">
+        ${escapeHtml(p.title || "")}
+      </h3>
+    </div>
+
+    <div class="popup-image">
+      ${imgHtml}
+    </div>
+
+    <div class="popup-description">
+      <p>${escapeHtml(p.description || "")}</p>
+    </div>
+
+    <div class="popup-link">
+      ${
+        p.link
+          ? `<a href="${p.link}" target="_blank" class="cta-button active ${color}">
+              <span class="cta-text">Per approfondire</span>
+              <span class="cta-arrow">→</span>
+            </a>`
+          : `<div class="cta-button inactive">
+              <span class="cta-text">Nessun link</span>
+            </div>`
+      }
+    </div>
+
+    <div class="age-tags">
+      ${["infanzia", "primaria", "secondaria"]
+        .map(
+          (tag) => `
+        <div class="age-tag ${tag} ${Array.isArray(p.ageTags) && p.ageTags.includes(tag) ? "selected" : ""}">
+          ${tag === "infanzia" ? "🧸 Infanzia" : tag === "primaria" ? "📚 Primaria" : "🎓 Secondaria"}
+        </div>`
+        )
+        .join("")}
+    </div>
+  `;
+
+  // log di supporto se manca image in JSON
+  if (!p.image) {
+    console.warn(`[popup senza image] colore=${color} titolo="${p.title}"`);
+  }
 
   return div;
 }
 
-function updatePopupData(color, index, field, value) {
-  popupData[color][index][field] = value;
+function renderPopups(list, color) {
+  const container = document.getElementById("popupContainer");
+  if (!container) return;
+  container.innerHTML = "";
+  list.forEach((p, i) => container.appendChild(createPopupElement(p, color, i)));
 
-  // Aggiorna lo stato del pulsante se è il campo link
-  if (field === "link") {
-    const popup = document.querySelector(`[data-popup="${color}-${index}"]`);
-    if (popup) {
-      const btn = popup.querySelector(".cta-button");
-      if (value && value.trim()) {
-        btn.classList.remove("inactive");
-        btn.classList.add("active", color);
-        btn.title = `Vai a: ${value}`;
-      } else {
-        btn.classList.remove(
-          "active",
-          "red",
-          "purple",
-          "blue",
-          "green",
-          "orange",
-          "yellow"
-        );
-        btn.classList.add("inactive");
-        btn.title = "Inserisci un URL per attivare il pulsante";
-      }
-    }
-  }
+  // opzionale: pulsante per aggiungere una card “vuota”
+  const addButton = document.createElement("div");
+  addButton.className = "add-popup-btn";
+  addButton.innerHTML = "+";
+  addButton.title = "Aggiungi nuovo popup";
+  addButton.addEventListener("click", () => addNewPopup(color));
+  container.appendChild(addButton);
 
-  autoSave();
+  container.classList.add("active");
+  container.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-function openLink(color, index) {
-  const link = popupData[color][index].link;
-  if (link && link.trim()) {
-    // Assicurati che il link abbia il protocollo
-    let url = link.trim();
-    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-      url = "https://" + url;
-    }
-    window.open(url, "_blank");
-  }
-}
-
-function loadPopupImage(color, index, input) {
-  const file = input.files[0];
-  if (file) {
-    // Validazione del file
-    if (!file.type.startsWith("image/")) {
-      alert("Per favore seleziona un file immagine valido.");
-      return;
-    }
-
-    // Limite dimensione per popup (2MB)
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Il file è troppo grande per un popup. Massimo 2MB.");
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      try {
-        const imageData = e.target.result;
-        popupData[color][index].image = imageData;
-        const container = input.parentElement;
-        container.innerHTML = `<img src="${imageData}" alt="Popup image">
-                                              <input type="file" accept="image/*" onchange="loadPopupImage('${color}', ${index}, this)">`;
-        autoSave();
-      } catch (error) {
-        console.error("Errore nel caricamento immagine popup:", error);
-        alert("Errore nel caricamento dell'immagine.");
-      }
-    };
-
-    reader.onerror = function () {
-      alert("Errore nella lettura del file.");
-    };
-
-    reader.readAsDataURL(file);
-  }
-}
-
-function togglePopupMenu(color, index) {
-  const menu = document.getElementById(`menu-${color}-${index}`);
-  const allMenus = document.querySelectorAll(".popup-menu-dropdown");
-
-  // Chiudi tutti gli altri menu
-  allMenus.forEach((m) => {
-    if (m !== menu) {
-      m.classList.remove("active");
-    }
-  });
-
-  // Toggle del menu corrente
-  menu.classList.toggle("active");
-}
-
-function duplicatePopup(color, index) {
-  const originalPopup = popupData[color][index];
-  const newPopup = {
-    ...originalPopup,
+/* ---------- Interazioni base ---------- */
+function addNewPopup(color) {
+  const list = popupData[color] || (popupData[color] = []);
+  const base =
+    color === "red" ? "Concetto AI" :
+    color === "purple" ? "Robot" :
+    color === "blue" ? "Codice" :
+    color === "green" ? "Formula" :
+    color === "orange" ? "Progetto" : "Esperimento";
+  const i = list.length + 1;
+  list.push({
     id: `${color}_${Date.now()}`,
-    title: originalPopup.title + " (Copia)",
-  };
-
-  popupData[color].push(newPopup);
-  showPopups(color);
-  autoSave();
-}
-
-function confirmDeletePopup(color, index) {
-  const popup = popupData[color][index];
-
-  // Crea un dialog personalizzato più visibile
-  const confirmDialog = document.createElement("div");
-  confirmDialog.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0,0,0,0.7);
-                z-index: 10001;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            `;
-
-  confirmDialog.innerHTML = `
-                <div style="
-                    background: white;
-                    padding: 30px;
-                    border-radius: 15px;
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                    text-align: center;
-                    max-width: 400px;
-                    margin: 20px;
-                ">
-                    <h3 style="margin: 0 0 15px 0; color: #dc3545;">🗑️ Elimina Popup</h3>
-                    <p style="margin: 0 0 20px 0; color: #666;">
-                        Sei sicuro di voler eliminare<br>
-                        <strong>"${popup.title}"</strong>?
-                    </p>
-                    <div style="display: flex; gap: 10px; justify-content: center;">
-                        <button onclick="this.closest('div').parentElement.remove()" style="
-                            padding: 10px 20px;
-                            border: 2px solid #6c757d;
-                            background: white;
-                            color: #6c757d;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            font-weight: 600;
-                        ">Annulla</button>
-                        <button onclick="executeDelete('${color}', ${index}); this.closest('div').parentElement.remove();" style="
-                            padding: 10px 20px;
-                            border: none;
-                            background: #dc3545;
-                            color: white;
-                            border-radius: 8px;
-                            cursor: pointer;
-                            font-weight: 600;
-                        ">Elimina</button>
-                    </div>
-                </div>
-            `;
-
-  document.body.appendChild(confirmDialog);
-
-  // Chiudi cliccando fuori
-  confirmDialog.addEventListener("click", function (e) {
-    if (e.target === confirmDialog) {
-      confirmDialog.remove();
-    }
+    title: `${base} ${i}`,
+    description: "",
+    link: "",
+    image: "",
+    active: true,
+    ageTags: [],
   });
-}
-
-function executeDelete(color, index) {
-  // Rimuovi il popup dai dati
-  popupData[color].splice(index, 1);
-
-  // Ricarica completamente i popup
-  showPopups(color);
+  renderPopups(list, color);
   autoSave();
 }
 
-function toggleAgeTag(color, index, tag, element) {
-  const tags = popupData[color][index].ageTags;
-  const tagIndex = tags.indexOf(tag);
-
-  if (tagIndex > -1) {
-    // Rimuovi il tag se già selezionato
-    tags.splice(tagIndex, 1);
-    element.classList.remove("selected");
-  } else {
-    // Aggiungi il tag se non selezionato
-    tags.push(tag);
-    element.classList.add("selected");
-  }
-  autoSave();
+/* ---------- Controller ---------- */
+async function showPopups(color) {
+  const list = popupData[color] || [];
+  renderPopups(list, color);
 }
 
-// Funzione di ricerca
-document.getElementById("searchInput").addEventListener("input", function (e) {
-  const searchTerm = e.target.value.toLowerCase();
-  const cards = document.querySelectorAll(".term-card");
+/* ---------- Ricerca (match esatto sul titolo, case-insensitive) ---------- */
+const searchInput = document.getElementById("searchInput");
+if (searchInput) {
+  searchInput.addEventListener("input", (e) => {
+    const q = String(e.target.value).toLowerCase().trim();
+    const popupContainer = document.getElementById("popupContainer");
 
-  cards.forEach((card) => {
-    const title = card.querySelector(".term-title").textContent.toLowerCase();
-
-    if (title.includes(searchTerm)) {
-      card.style.display = "block";
-    } else {
-      card.style.display = searchTerm ? "none" : "block";
+    if (!q) {
+      popupContainer.classList.remove("active");
+      popupContainer.innerHTML = "";
+      document.querySelectorAll(".term-card").forEach((card) => {
+        card.style.display = "block";
+      });
+      return;
     }
-  });
-});
 
-// Funzioni per gestione immagine
-function removeImage() {
-  if (confirm("Sei sicuro di voler eliminare l'immagine?")) {
-    document.getElementById("imageViewer").classList.remove("active");
-    document.getElementById("imageUpload").style.display = "block";
-    document.getElementById("mainImage").src = "";
-    imageLoaded = false;
-    localStorage.removeItem("ecosistem_main_image");
-    closeFullscreen();
-  }
-}
+    // nascondo le card
+    document.querySelectorAll(".term-card").forEach((card) => {
+      card.style.display = "none";
+    });
 
-function replaceImage() {
-  document.getElementById("replaceImageInput").click();
-}
+    // cerca nei popupData per titolo ESATTO (case-insensitive)
+    popupContainer.innerHTML = "";
+    let found = false;
 
-document
-  .getElementById("replaceImageInput")
-  .addEventListener("change", function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      // Validazione del file
-      if (!file.type.startsWith("image/")) {
-        alert("Per favore seleziona un file immagine valido.");
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        alert("Il file è troppo grande. Massimo 5MB.");
-        return;
-      }
-
-      const loadingIndicator = document.getElementById("loadingIndicator");
-      loadingIndicator.classList.add("active");
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        try {
-          const imageData = e.target.result;
-          const img = document.getElementById("mainImage");
-
-          const testImg = new Image();
-          testImg.onload = function () {
-            img.src = imageData;
-            imageLoaded = true;
-            loadingIndicator.classList.remove("active");
-
-            try {
-              localStorage.setItem("ecosistem_main_image", imageData);
-            } catch (storageError) {
-              console.warn("Impossibile salvare l'immagine:", storageError);
-            }
-          };
-
-          testImg.onerror = function () {
-            loadingIndicator.classList.remove("active");
-            alert("Errore nel caricamento dell'immagine.");
-          };
-
-          testImg.src = imageData;
-        } catch (error) {
-          loadingIndicator.classList.remove("active");
-          console.error("Errore:", error);
-          alert("Errore nel caricamento dell'immagine.");
+    Object.entries(popupData).forEach(([color, list]) => {
+      list.forEach((popup, index) => {
+        const t = String(popup.title || "").toLowerCase().trim();
+        if (t === q) {
+          popupContainer.appendChild(createPopupElement(popup, color, index));
+          found = true;
         }
-      };
+      });
+    });
 
-      reader.onerror = function () {
-        loadingIndicator.classList.remove("active");
-        alert("Errore nella lettura del file.");
-      };
-
-      reader.readAsDataURL(file);
-    }
+    if (found) popupContainer.classList.add("active");
+    else popupContainer.classList.remove("active");
   });
+}
+
+/* ---------- Boot ---------- */
+document.addEventListener("DOMContentLoaded", async () => {
+  // fullscreen immagine principale
+  const mainImage = document.getElementById("mainImage");
+  if (mainImage) {
+    if (mainImage.getAttribute("src")) imageLoaded = true;
+    mainImage.addEventListener("click", openFullscreen);
+  }
+
+  await loadFixedDataset(); // carica glossario.json in popupData
+  renderTermsGrid();        // crea le card
+  loadLocal();              // applica eventuali preferenze locali
+
+  // chiudi overlay a click
+  const overlay = document.getElementById("fullscreenOverlay");
+  if (overlay) overlay.addEventListener("click", closeFullscreen);
+});

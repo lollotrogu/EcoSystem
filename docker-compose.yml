@@ -12,4 +12,5 @@ services:
     # in produzione evita i volumi e usa solo la COPY del Dockerfile.
     volumes:
       - ./:/var/www/html
+    # opzionale: abilita mod_rewrite se ti serve
     restart: unless-stopped

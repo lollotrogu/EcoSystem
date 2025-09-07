@@ -1,0 +1,49 @@
+{
+  "red": [
+    { "title": "Automata",           "image": "/assets/img/automata.jpg" },
+    { "title": "Reazioni a catena",  "image": "/assets/img/Reazione%20a%20catena.jpg" },
+    { "title": "Circuiti",           "image": "/assets/img/circuiti%20elettrici.png" },
+    { "title": "Little Bits",        "image": "/assets/img/Little%20Bits.png" },
+    { "title": "Makey-Makey",        "image": "/assets/img/Makey%20Makey.png" },
+    { "title": "Micro:bit",          "image": "/assets/img/Microbit.png" },
+    { "title": "Arduino",            "image": "/assets/img/arduino.jpg" }
+  ],
+  "purple": [
+    { "title": "Coding unplugged",   "image": "/assets/img/coding%20unplugged.webp" },
+    { "title": "Cody Roby",          "image": "/assets/img/Cody%20Roby.png" },
+    { "title": "Pixel art",          "image": "/assets/img/pixel-art.png" },
+    { "title": "Scratch",            "image": "/assets/img/scratch.png" },
+    { "title": "Minecraft",          "image": "/assets/img/Minecraft.jpg" }
+  ],
+  "blue": [
+    { "title": "Cubetto",            "image": "/assets/img/cubettoAI.png" },
+    { "title": "Bee-bot",            "image": "/assets/img/Beebot.png" },
+    { "title": "Ozobot",             "image": "/assets/img/ozobot.jpg" },
+    { "title": "Thymio",             "image": "/assets/img/Thymio.png" },
+    { "title": "Lego WeDo",          "image": "/assets/img/Lego%20WeDo.jpg" },
+    { "title": "Lego Spike Prime",   "image": "/assets/img/Lego%20Spike.png" },
+    { "title": "Lego EV3",           "image": "/assets/img/LEGO%20EV3.png" },
+    { "title": "mBot",               "image": "/assets/img/mbot.jpg" },
+    { "title": "Droni",              "image": "/assets/img/droni.jpg" }
+  ],
+  "green": [
+    { "title": "Tavoli luminosi",    "image": "/assets/img/tavolo%20luminoso.jpg" },
+    { "title": "Paesaggi digitali",  "image": "/assets/img/paesaggi%20digitali.jpg" },
+    { "title": "Teatro ombre",       "image": "/assets/img/images.jpg" },
+    { "title": "Boxio",              "image": "/assets/img/boxio.png" },
+    { "title": "Mozaik",             "image": "/assets/img/mozaik.png" },
+    { "title": "Visori V/R",         "image": "/assets/img/Visori%20VR.png" }
+  ],
+  "orange": [
+    { "title": "Doodles 3D",         "image": "/assets/img/Doodlestudio.png" },
+    { "title": "Tinkercad",          "image": "/assets/img/Tinkercad.jpg" },
+    { "title": "Cricut",             "image": "/assets/img/Cricut.jpg" },
+    { "title": "Lasercut",           "image": "/assets/img/Lasercut.jpg" },
+    { "title": "Stampa 3D",          "image": "/assets/img/Stampa%203D.jpg" }
+  ],
+  "yellow": [
+    { "title": "Google Workspace",   "image": "/assets/img/Google-Workspace.webp" },
+    { "title": "Pillole di Chromebook", "image": "/assets/img/chromebook.jpg" },
+    { "title": "IA",                 "image": "/assets/img/images.jpg" }
+  ]
+}
