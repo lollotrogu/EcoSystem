@@ -1,6 +1,5 @@
 /* =========================================================
    EcosiSTEM - Frontend JS (cards + popup con dataset fisso)
-   Compatibile con GitHub Pages (project site) e locale
    ========================================================= */
 
 /* ---------- Config ---------- */
@@ -25,37 +24,64 @@ const CARD_TITLES = {
 /* ---------- Rilevamento base path (GitHub Pages vs locale) ---------- */
 const isGitHubPages = location.hostname.endsWith("github.io");
 const pathParts = location.pathname.split("/").filter(Boolean);
+// es: /username.github.io/EcoSystem/frontend/home.html -> repoBase = "/EcoSystem/"
 const REPO_BASE = isGitHubPages && pathParts.length > 0 ? `/${pathParts[0]}/` : "/";
 
 /* Punti base del progetto pubblicato */
-const PUBLIC_BASE   = `${REPO_BASE}public/`;
-const ASSETS_BASE   = `${PUBLIC_BASE}assets/`;
-const DATA_BASE     = `${ASSETS_BASE}data/`;
+const PUBLIC_BASE = `${REPO_BASE}public/`;          // "/EcoSystem/public/"  oppure "/public/"
+const ASSETS_BASE = `${PUBLIC_BASE}assets/`;        // ".../public/assets/"
+const DATA_BASE   = `${ASSETS_BASE}data/`;          // ".../public/assets/data/"
 
 /* URL assoluto del glossario (indipendente da pagina) */
 const GLOSSARIO_URL = new URL("glossario.json", new URL(DATA_BASE, location.origin)).toString();
 
-/* ---------- Utils: risoluzione URL asset dal JSON ---------- */
+/* ---------- Stato ---------- */
+let popupData = {}; // dataset per colore (preso da glossario.json)
+let autoSaveTimeout = null;
+let imageLoaded = false;
+
+/* ---------- Utils ---------- */
+function escapeHtml(s) {
+  return (s || "").replace(/[&<>"']/g, (m) =>
+    m === "&" ? "&amp;" :
+    m === "<" ? "&lt;" :
+    m === ">" ? "&gt;" :
+    m === '"' ? "&quot;" : "&#39;"
+  );
+}
+
+async function fetchJSON(url) {
+  try {
+    const r = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    return await r.json();
+  } catch (e) {
+    console.warn("fetchJSON error:", url, e);
+    return null;
+  }
+}
+
+/** Risolve un path di asset (image/link) proveniente dal JSON
+ *  - URL http/https -> restituito com’è
+ *  - "/assets/..."  -> prefissato con PUBLIC_BASE  (/…/public/assets/…)
+ *  - altri relativi  -> risolti rispetto alla cartella del JSON (/…/public/assets/data/)
+ */
 function assetUrl(p) {
   if (!p) return "";
   const s = String(p).trim();
   if (!s) return "";
-  if (/^https?:\/\//i.test(s)) return s; // URL esterno, tienilo così com'è
+  if (/^https?:\/\//i.test(s)) return s;
 
-  // Caso 1: il JSON usa percorsi assoluti da /assets/...
   if (s.startsWith("/assets/")) {
-    // su GitHub Pages serve il prefisso /<repo>/public/
-    return `${PUBLIC_BASE}${s.replace(/^\/+/, "")}`; // -> /<repo>/public/assets/...
+    // es: "/assets/img/automata.jpg" -> "/<repo>/public/assets/img/automata.jpg"
+    return `${PUBLIC_BASE}${s.replace(/^\/+/, "")}`;
   }
 
-  // Caso 2: qualunque altro relativo (es. "../img/xxx.jpg" oppure "img/xxx.jpg")
-  // Risolvo *relativamente* alla cartella del JSON: /public/assets/data/
+  // "../img/automata.jpg" o "img/automata.jpg" ecc.: relativo alla cartella del JSON
   const base = new URL(DATA_BASE, location.origin);
   const resolved = new URL(s, base);
-  // Ritorno path relativo all'host (va bene sia in locale che su Pages)
   return resolved.pathname + resolved.search + resolved.hash;
 }
-
 
 /* ---------- Persistenza minima locale (titoli pagina e card) ---------- */
 function autoSave() {
@@ -110,21 +136,22 @@ function sanitizeDataset(ds) {
   const clean = {};
   COLORS.forEach((c) => {
     const arr = Array.isArray(ds?.[c]) ? ds[c] : [];
-    clean[c] = arr.map((it, idx) => ({
-      id: it.id || `${c}_${idx}`,
-      title: typeof it.title === "string" ? it.title : "",
-      description: typeof it.description === "string" ? it.description : "",
-      link: typeof it.link === "string" ? it.link : "",
-      image: typeof it.image === "string" ? it.image : "",
-      active: it.active !== false,
-      ageTags: Array.isArray(it.ageTags) ? it.ageTags : [],
-    }));
+    clean[c] = arr.map((it, idx) => {
+      const item = { ...it };
+      item.title = typeof item.title === "string" ? item.title : "";
+      item.description = typeof item.description === "string" ? item.description : "";
+      item.link = typeof item.link === "string" ? item.link : "";
+      item.image = typeof item.image === "string" ? item.image : "";
+      item.ageTags = Array.isArray(item.ageTags) ? item.ageTags : [];
+      item.id = item.id || `${c}_${idx}`;
+      return item;
+    });
   });
   return clean;
 }
 
 async function loadFixedDataset() {
-  // carica dal percorso corretto per locale + GitHub Pages
+  // carica sempre dal percorso assoluto costruito in base all’host
   const json = await fetchJSON(GLOSSARIO_URL);
   if (json) {
     popupData = sanitizeDataset(json);
@@ -141,7 +168,7 @@ async function loadFixedDataset() {
   }
   // fallback estremo
   popupData = Object.fromEntries(COLORS.map((c) => [c, []]));
-  console.warn("Dataset vuoto: verifica il file glossario.json in public/assets/data/");
+  console.warn("Dataset vuoto: verifica", GLOSSARIO_URL);
 }
 
 /* ---------- Fullscreen immagine principale ---------- */
@@ -191,15 +218,13 @@ function createPopupElement(p, color, index) {
   div.dataset.popup = `${color}-${index}`;
   div.style.borderColor = COLOR_HEX[color];
 
-  // risolvi path immagine (relativo → assoluto) e onerror
   const imgSrc = assetUrl(p.image);
+  const linkHref = assetUrl(p.link);
+
   const imgHtml = imgSrc
     ? `<img src="${imgSrc}" alt="Immagine popup"
          onerror="console.warn('Immagine non trovata:', this.src); this.onerror=null; this.style.display='none';">`
     : "";
-
-  // se i link nel JSON sono in assets (pdf ecc.), risolvi anche quelli
-  const href = p.link ? assetUrl(p.link) : "";
 
   div.innerHTML = `
     <div class="popup-header" style="background:${COLOR_HEX[color]};
@@ -219,8 +244,8 @@ function createPopupElement(p, color, index) {
 
     <div class="popup-link">
       ${
-        href
-          ? `<a href="${href}" target="_blank" class="cta-button active ${color}">
+        p.link
+          ? `<a href="${linkHref}" target="_blank" rel="noopener" class="cta-button active ${color}">
               <span class="cta-text">Per approfondire</span>
               <span class="cta-arrow">→</span>
             </a>`
@@ -255,7 +280,7 @@ function renderPopups(list, color) {
   container.innerHTML = "";
   list.forEach((p, i) => container.appendChild(createPopupElement(p, color, i)));
 
-  // opzionale: pulsante per aggiungere una card “vuota” lato client (non persiste)
+  // opzionale: pulsante per aggiungere una card “vuota”
   const addButton = document.createElement("div");
   addButton.className = "add-popup-btn";
   addButton.innerHTML = "+";
@@ -267,21 +292,15 @@ function renderPopups(list, color) {
   container.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-/* ---------- Interazioni base ---------- */
+/* ---------- Interazioni base (facoltative) ---------- */
 function addNewPopup(color) {
   const list = popupData[color] || (popupData[color] = []);
   const base =
-    color === "red"
-      ? "Concetto AI"
-      : color === "purple"
-      ? "Robot"
-      : color === "blue"
-      ? "Codice"
-      : color === "green"
-      ? "Formula"
-      : color === "orange"
-      ? "Progetto"
-      : "Esperimento";
+    color === "red" ? "Concetto AI" :
+    color === "purple" ? "Robot" :
+    color === "blue" ? "Codice" :
+    color === "green" ? "Formula" :
+    color === "orange" ? "Progetto" : "Esperimento";
   const i = list.length + 1;
   list.push({
     id: `${color}_${Date.now()}`,
@@ -302,47 +321,9 @@ async function showPopups(color) {
   renderPopups(list, color);
 }
 
-/* ---------- Ricerca (match esatto sul titolo, case-insensitive) ---------- */
-const searchInput = document.getElementById("searchInput");
-if (searchInput) {
-  searchInput.addEventListener("input", (e) => {
-    const q = String(e.target.value).toLowerCase().trim();
-    const popupContainer = document.getElementById("popupContainer");
-
-    if (!q) {
-      popupContainer.classList.remove("active");
-      popupContainer.innerHTML = "";
-      document.querySelectorAll(".term-card").forEach((card) => {
-        card.style.display = "block";
-      });
-      return;
-    }
-
-    // nascondo le card macro
-    document.querySelectorAll(".term-card").forEach((card) => {
-      card.style.display = "none";
-    });
-
-    // cerca nei popupData (titolo ESATTO, case-insensitive)
-    popupContainer.innerHTML = "";
-    let found = false;
-
-    Object.entries(popupData).forEach(([color, list]) => {
-      list.forEach((popup, index) => {
-        const t = String(popup.title || "").toLowerCase().trim();
-        if (t === q) {
-          popupContainer.appendChild(createPopupElement(popup, color, index));
-          found = true;
-        }
-      });
-    });
-
-    if (found) popupContainer.classList.add("active");
-    else popupContainer.classList.remove("active");
-  });
-}
-
-/* ---------- Boot ---------- */
+/* =========================================================
+   BOOT
+   ========================================================= */
 document.addEventListener("DOMContentLoaded", async () => {
   // fullscreen immagine principale
   const mainImage = document.getElementById("mainImage");
@@ -350,12 +331,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (mainImage.getAttribute("src")) imageLoaded = true;
     mainImage.addEventListener("click", openFullscreen);
   }
-
-  await loadFixedDataset(); // carica glossario.json in popupData
-  renderTermsGrid();        // crea le card macro
-  loadLocal();              // applica eventuali preferenze locali
-
-  // chiudi overlay a click
   const overlay = document.getElementById("fullscreenOverlay");
   if (overlay) overlay.addEventListener("click", closeFullscreen);
+
+  await loadFixedDataset(); // carica glossario.json in popupData
+  renderTermsGrid();        // crea le card
+  loadLocal();              // applica eventuali preferenze locali
+
+  // Ricerca: match ESATTO (case-insensitive) del titolo card
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", (e) => {
+      const q = String(e.target.value).toLowerCase().trim();
+      const popupContainer = document.getElementById("popupContainer");
+
+      if (!q) {
+        popupContainer.classList.remove("active");
+        popupContainer.innerHTML = "";
+        document.querySelectorAll(".term-card").forEach((card) => {
+          card.style.display = "block";
+        });
+        return;
+      }
+
+      // nascondo le card
+      document.querySelectorAll(".term-card").forEach((card) => {
+        card.style.display = "none";
+      });
+
+      // cerca nei popupData per titolo ESATTO (case-insensitive)
+      popupContainer.innerHTML = "";
+      let found = false;
+
+      Object.entries(popupData).forEach(([color, list]) => {
+        list.forEach((popup, index) => {
+          const t = String(popup.title || "").toLowerCase().trim();
+          if (t === q) {
+            popupContainer.appendChild(createPopupElement(popup, color, index));
+            found = true;
+          }
+        });
+      });
+
+      if (found) popupContainer.classList.add("active");
+      else popupContainer.classList.remove("active");
+    });
+  }
 });
