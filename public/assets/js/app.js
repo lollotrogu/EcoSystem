@@ -127,7 +127,7 @@ function sanitizeDataset(ds) {
 }
 
 async function loadFixedDataset() {
-  const json = await fetchJSON("/assets/data/glossario.json?v=2");
+  const json = await fetchJSON("../public/assets/data/glossario.json?v=2");
   if (json) {
     popupData = sanitizeDataset(json);
     try {
