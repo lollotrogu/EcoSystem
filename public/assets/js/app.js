@@ -299,12 +299,13 @@ function renderPopups(list, color) {
   list.forEach((p, i) => container.appendChild(createPopupElement(p, color, i)));
 
   // opzionale: pulsante per aggiungere una card “vuota”
+  /*
   const addButton = document.createElement("div");
   addButton.className = "add-popup-btn";
   addButton.innerHTML = "+";
   addButton.title = "Aggiungi nuovo popup";
   addButton.addEventListener("click", () => addNewPopup(color));
-  container.appendChild(addButton);
+  container.appendChild(addButton);*/
 
   container.classList.add("active");
   container.scrollIntoView({ behavior: "smooth", block: "start" });
