@@ -46,6 +46,6 @@
   "yellow": [
     { "id":"yellow_0","title":"Google Workspace","description":"Suite per collaborazione e produttività: documenti condivisi, presentazioni e fogli di calcolo per lavorare in sincrono e asincrono.", "link":"", "image":"../img/Google-Workspace.webp", "active":true, "ageTags":["primaria","secondaria"] },
     { "id":"yellow_1","title":"Pillole di Chromebook","description":"Uso di dispositivi leggeri e basati su cloud per accedere a risorse didattiche e piattaforme collaborative. Sviluppo di competenze digitali e autonomia.", "link":"", "image":"../img/chromebook.jpg",         "active":true, "ageTags":["primaria","secondaria"] },
-    { "id":"yellow_2","title":"IA",              "description":"", "link":"", "image":"../img/AI.png", "active":true, "ageTags":["primaria","secondaria"] }
+    { "id":"yellow_2","title":"Intelligenza Artificiale",              "description":"", "link":"", "image":"../img/AI.png", "active":true, "ageTags":["primaria","secondaria"] }
   ]
 }
