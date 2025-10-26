@@ -312,6 +312,7 @@ function renderPopups(list, color) {
 }
 
 /* ---------- Interazioni base (facoltative) ---------- */
+/*
 function addNewPopup(color) {
   const list = popupData[color] || (popupData[color] = []);
   const base =
@@ -333,6 +334,7 @@ function addNewPopup(color) {
   renderPopups(list, color);
   autoSave();
 }
+  */
 
 /* ---------- Controller ---------- */
 async function showPopups(color) {
