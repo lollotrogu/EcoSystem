@@ -930,3 +930,11 @@ body {
   animation: zoomInFullscreen 0.5s ease forwards;
   animation-delay: 0.1s;
 }
+
+.popup.has-link {
+  cursor: pointer;
+}
+
+.popup.has-link {
+  cursor: pointer;
+}

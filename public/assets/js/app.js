@@ -285,6 +285,14 @@ function createPopupElement(p, color, index) {
     </div>
   `;
 
+  if (linkHref) {
+    div.classList.add("has-link");
+    div.addEventListener("click", (e) => {
+      if (e.target.closest("a.cta-button")) return;
+      window.open(linkHref, "_blank", "noopener");
+    });
+  }
+
   if (!p.image) {
     console.warn(`[popup senza image] colore=${color} titolo="${p.title}"`);
   }
