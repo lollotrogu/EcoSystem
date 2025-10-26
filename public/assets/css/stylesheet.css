@@ -938,3 +938,28 @@ body {
 .popup.has-link {
   cursor: pointer;
 }
+
+.cta-button.active.red {
+  background: #ff0000;
+}
+
+.cta-button.active.purple {
+  background: #8c52ff;
+}
+
+.cta-button.active.blue {
+  background: #38b6ff;
+}
+
+.cta-button.active.green {
+  background: #7ed957;
+}
+
+.cta-button.active.orange {
+  background: #ff914d;
+}
+
+.cta-button.active.yellow {
+  background: #ffff00;
+  color: #333;
+}
