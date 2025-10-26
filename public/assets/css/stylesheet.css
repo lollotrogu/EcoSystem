@@ -688,32 +688,33 @@ body {
 
 .cta-button.active.red {
   background: #ff0000;
-  opacity: 0.5;
+  
 }
 
 .cta-button.active.purple {
   background: #8c52ff;
-  opacity: 0.5;
 }
+
+
 
 .cta-button.active.blue {
   background: #38b6ff;
-  opacity: 0.5;
+ 
 }
 
 .cta-button.active.green {
   background: #7ed957;
-  opacity: 0.5;
+ 
 }
 
 .cta-button.active.orange {
   background: #ff914d;
-  opacity: 0.5;
+ 
 }
 
 .cta-button.active.yellow {
   background: #ffff00;
-  opacity: 0.5;
+ 
   color: #333;
 }
 
