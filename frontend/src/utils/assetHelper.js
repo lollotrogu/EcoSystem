@@ -3,7 +3,11 @@
  * sia in ambiente di sviluppo (Vite dev) che in produzione servita da PHP.
  */
 export function resolveAssetUrl(path) {
-  const assetBase = import.meta.env?.VITE_ASSET_BASE || '/assets/';
+  const assetBase = (() => {
+    if (import.meta.env?.VITE_STATIC_SITE) return import.meta.env.VITE_ASSET_BASE || '/assets/';
+    if (typeof window !== 'undefined' && window.location.pathname.includes('/public/dist')) return '../../assets/';
+    return '/assets/';
+  })();
   if (!path) return '';
   const raw = String(path).trim();
   if (!raw) return '';
@@ -41,4 +45,3 @@ export function resolveAssetUrl(path) {
 
   return raw.startsWith('/') ? raw : `/${raw}`;
 }
-

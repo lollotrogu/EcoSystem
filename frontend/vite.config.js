@@ -15,16 +15,21 @@ export default defineConfig(({ mode }) => {
   },
   plugins: [
     react(),
-    ...(isPages ? [{
-      name: 'github-pages-assets',
+    [{
+      name: 'portable-assets',
       transformIndexHtml(html) {
-        return html.replace('href="/assets/img/immagine_home.png"', `href="${base}assets/img/immagine_home.png"`);
+        if (isPages) return html.replace('href="/assets/img/immagine_home.png"', `href="${base}assets/img/immagine_home.png"`);
+        return html
+          .replace(/src="\/dist\/assets\//g, 'src="./assets/')
+          .replace(/href="\/dist\/assets\//g, 'href="./assets/')
+          .replace('href="/assets/img/immagine_home.png"', 'href="../assets/img/immagine_home.png"');
       },
       closeBundle() {
-        fs.cpSync(path.resolve(__dirname, '../public/assets'), path.resolve(__dirname, '../pages-dist/assets'), { recursive: true });
-        fs.writeFileSync(path.resolve(__dirname, '../pages-dist/.nojekyll'), '');
+        const target = isPages ? '../pages-dist/assets' : '../public/dist/assets';
+        fs.cpSync(path.resolve(__dirname, '../public/assets'), path.resolve(__dirname, target), { recursive: true });
+        if (isPages) fs.writeFileSync(path.resolve(__dirname, '../pages-dist/.nojekyll'), '');
       },
-    }] : []),
+    }],
     {
       name: 'serve-ecosistem-assets',
       configureServer(server) {
