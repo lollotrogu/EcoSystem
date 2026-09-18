@@ -64,3 +64,26 @@ Vite genererà gli asset ottimizzati in `public/dist/` pronti per essere serviti
 | `GET` | `/api/health` | Diagnostica dell'accesso ai dati del glossario |
 | `GET` | `/api/glossario` | Dati completi del glossario STEM con supporto cache `ETag` |
 
+
+
+## Pubblicazione su GitHub Pages
+
+Il workflow `.github/workflows/pages.yml` compila e pubblica il portale a ogni push su `main`.
+
+1. Nel repository GitHub apri **Settings → Pages**.
+2. In **Build and deployment → Source** scegli **GitHub Actions** (configurazione iniziale).
+3. Pubblica queste modifiche su `main`, oppure avvia **Actions → Publish EcosiStem to GitHub Pages → Run workflow**.
+4. Attendi che il job `deploy` sia completato. Il sito sarà disponibile su https://lollotrogu.github.io/EcoSystem/.
+
+La build Pages usa il nome del repository per il prefisso URL, carica direttamente il JSON e include immagini e PDF, senza richiedere PHP. Pubblica soltanto il contenuto statico generato, non i sorgenti del backend.
+
+Per generare lo stesso artifact localmente:
+
+```powershell
+cd frontend
+npm run build:pages
+```
+
+L'output è `pages-dist/` (non versionato). Per domini personalizzati è possibile impostare `VITE_BASE=/` prima della build. Il normale `npm run build` continua a rigenerare `public/dist/` per PHP con API e fallback JSON.
+
+Riferimento: [deploy Vite su GitHub Pages](https://vite.dev/guide/static-deploy#github-pages).

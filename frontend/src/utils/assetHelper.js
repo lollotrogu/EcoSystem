@@ -3,6 +3,7 @@
  * sia in ambiente di sviluppo (Vite dev) che in produzione servita da PHP.
  */
 export function resolveAssetUrl(path) {
+  const assetBase = import.meta.env?.VITE_ASSET_BASE || '/assets/';
   if (!path) return '';
   const raw = String(path).trim();
   if (!raw) return '';
@@ -13,7 +14,7 @@ export function resolveAssetUrl(path) {
     // normalizziamo per usare gli asset locali
     if (raw.includes('/public/assets/pdf/')) {
       const filename = raw.split('/public/assets/pdf/')[1];
-      return `/assets/pdf/${filename}`;
+      return `${assetBase}pdf/${filename}`;
     }
     return raw;
   }
@@ -21,21 +22,21 @@ export function resolveAssetUrl(path) {
   // Se è un percorso relativo con ../img/ o /img/
   if (/^(\.\.\/)*img\//i.test(raw) || raw.startsWith('/img/')) {
     const filename = raw.replace(/^(\.\.\/)*img\//i, '').replace(/^\/img\//i, '');
-    return `/assets/img/${filename}`;
+    return `${assetBase}img/${filename}`;
   }
 
   // Se è un percorso relativo con ../pdf/ o /pdf/
   if (/^(\.\.\/)*pdf\//i.test(raw) || raw.startsWith('/pdf/')) {
     const filename = raw.replace(/^(\.\.\/)*pdf\//i, '').replace(/^\/pdf\//i, '');
-    return `/assets/pdf/${filename}`;
+    return `${assetBase}pdf/${filename}`;
   }
 
   // Se comincia già con assets/ o /assets/
   if (raw.startsWith('/assets/')) {
-    return raw;
+    return `${assetBase}${raw.slice('/assets/'.length)}`;
   }
   if (raw.startsWith('assets/')) {
-    return `/${raw}`;
+    return `${assetBase}${raw.slice('assets/'.length)}`;
   }
 
   return raw.startsWith('/') ? raw : `/${raw}`;

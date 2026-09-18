@@ -7,6 +7,7 @@ import TermGrid from './components/TermGrid';
 import { CATEGORIES } from './constants/categories';
 import { Loader2, RefreshCw } from 'lucide-react';
 import { MotionConfig } from 'framer-motion';
+import { resolveAssetUrl } from './utils/assetHelper';
 
 export default function App() {
   const [dataset, setDataset] = useState(null);
@@ -21,13 +22,13 @@ export default function App() {
     setError(null);
     try {
       // 1. Prova prima l'endpoint API backend protetto
-      let response = await fetch('/api/glossario', {
+      let response = import.meta.env.VITE_STATIC_SITE ? null : await fetch('/api/glossario', {
         headers: { Accept: 'application/json' },
       }).catch(() => null);
 
       // 2. Se fallisce (es. server PHP non avviato durante vite dev), usa il percorso statico locale
       if (!response || !response.ok) {
-        response = await fetch('/assets/data/glossario.json', {
+        response = await fetch(resolveAssetUrl('/assets/data/glossario.json'), {
           headers: { Accept: 'application/json' },
         });
       }

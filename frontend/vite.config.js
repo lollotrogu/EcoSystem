@@ -3,9 +3,28 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import fs from 'fs';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+  const isPages = mode === 'pages';
+  const repository = (process.env.GITHUB_REPOSITORY || 'lollotrogu/EcoSystem').split('/')[1];
+  const pagesBase = process.env.VITE_BASE || (repository.endsWith('.github.io') ? '/' : `/${repository}/`);
+  const base = isPages ? pagesBase : (process.env.VITE_BASE || '/dist/');
+  return {
+  define: {
+    'import.meta.env.VITE_STATIC_SITE': JSON.stringify(isPages),
+    'import.meta.env.VITE_ASSET_BASE': JSON.stringify(isPages ? `${base}assets/` : '/assets/'),
+  },
   plugins: [
     react(),
+    ...(isPages ? [{
+      name: 'github-pages-assets',
+      transformIndexHtml(html) {
+        return html.replace('href="/assets/img/immagine_home.png"', `href="${base}assets/img/immagine_home.png"`);
+      },
+      closeBundle() {
+        fs.cpSync(path.resolve(__dirname, '../public/assets'), path.resolve(__dirname, '../pages-dist/assets'), { recursive: true });
+        fs.writeFileSync(path.resolve(__dirname, '../pages-dist/.nojekyll'), '');
+      },
+    }] : []),
     {
       name: 'serve-ecosistem-assets',
       configureServer(server) {
@@ -37,9 +56,9 @@ export default defineConfig({
       },
     },
   ],
-  base: process.env.VITE_BASE || '/dist/',
+  base,
   build: {
-    outDir: '../public/dist',
+    outDir: isPages ? '../pages-dist' : '../public/dist',
     emptyOutDir: true,
   },
   server: {
@@ -51,5 +70,5 @@ export default defineConfig({
       },
     },
   },
+  };
 });
-
