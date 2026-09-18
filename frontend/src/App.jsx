@@ -16,28 +16,46 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  // Caricamento dati da backend API (con fallback su file statico JSON)
+  // Caricamento dati da backend API (con fallback progressivo su file statico JSON)
   const loadData = async () => {
     setLoading(true);
     setError(null);
     try {
-      // 1. Prova prima l'endpoint API backend protetto
-      let response = import.meta.env.VITE_STATIC_SITE ? null : await fetch('/api/glossario', {
-        headers: { Accept: 'application/json' },
-      }).catch(() => null);
+      const candidates = [
+        // 1. Endpoint API protetto (se attivo su server PHP)
+        ...(!import.meta.env.VITE_STATIC_SITE ? ['/api/glossario'] : []),
+        // 2. Percorso standard calcolato da resolveAssetUrl
+        resolveAssetUrl('/assets/data/glossario.json'),
+        // 3. Fallback progressivi per vari scenari di hosting (GitHub Pages root o subfolder, PHP docroot, Vite dev)
+        './assets/data/glossario.json',
+        '../assets/data/glossario.json',
+        './public/dist/assets/data/glossario.json',
+        './public/assets/data/glossario.json',
+        'assets/data/glossario.json',
+      ];
 
-      // 2. Se fallisce (es. server PHP non avviato durante vite dev), usa il percorso statico locale
-      if (!response || !response.ok) {
-        response = await fetch(resolveAssetUrl('/assets/data/glossario.json'), {
-          headers: { Accept: 'application/json' },
-        });
+      let json = null;
+      for (const url of [...new Set(candidates.filter(Boolean))]) {
+        try {
+          const response = await fetch(url, {
+            headers: { Accept: 'application/json' },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data && typeof data === 'object' && (data.red || data.blue || data.purple || data.green)) {
+              json = data;
+              break;
+            }
+          }
+        } catch {
+          // Continua con il candidato successivo
+        }
       }
 
-      if (!response.ok) {
-        throw new Error(`Impossibile recuperare i dati (HTTP ${response.status})`);
+      if (!json) {
+        throw new Error('Impossibile recuperare i dati del glossario da tutti i percorsi tentati.');
       }
 
-      const json = await response.json();
       setDataset(json);
     } catch (err) {
       console.error('Errore caricamento glossario:', err);
