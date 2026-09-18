@@ -1,22 +1,56 @@
-#STRUTTURA DEL PROGETTO
+# STRUTTURA DEL PROGETTO ECOSYSTEM (Refactoring Moderno)
+
 Ecosystem/
-├─ docker/
-│  ├─ vhost.conf ok 
-│  └─ php.ini ok 
-├─ docker-compose.yml ok
-├─ Dockerfile ok 
-├─ public/
-│  ├─ .htaccess ok
-│  └─ index.php ok 
-├─ app/
+├─ public/                          ← DocumentRoot del server web PHP
+│  ├─ dist/                         ← Bundle compilato dell'app React (generato da npm run build)
+│  │  ├─ index.html
+│  │  └─ assets/
+│  ├─ assets/                       ← File statici originali (immagini, pdf, glossario.json)
+│  │  ├─ data/
+│  │  │  ├─ glossario.json
+│  │  │  └─ glossario-images.json
+│  │  ├─ img/
+│  │  ├─ pdf/
+│  │  ├─ css/
+│  │  └─ js/
+│  ├─ .htaccess                     ← Rewrite Apache verso index.php
+│  └─ index.php                     ← Entry point unico PHP: Security Headers, Routing, API e SPA Fallback
+│
+├─ app/                             ← Backend PHP Puro (Architettura Modulare)
 │  ├─ Core/
-│  │  ├─ Router.php ok
-│  │  └─ Controller.php ok 
+│  │  ├─ Security.php               ← Header di sicurezza (CSP, nosniff, CORS, X-Frame-Options)
+│  │  ├─ Router.php                 ← Routing con dispatch sicuro, 404/405 e gestione eccezioni
+│  │  ├─ Request.php                ← Parsing sicuro di richieste, metodi e parametri
+│  │  ├─ Response.php               ← Helper risposte JSON e HTML
+│  │  └─ Controller.php             ← Controller base con helper view e json
 │  ├─ Controllers/
-│  │  └─ HomeController.php ok 
-│  ├─ Models/ ok 
+│  │  ├─ HomeController.php         ← Serve l'applicazione React SPA
+│  │  └─ ApiController.php          ← API REST (/api/glossario con cache ETag, /api/ping, /api/health)
 │  └─ Views/
-│     └─ home.php ok
-├─ frontend/
-│  └─ home.html   ← (il tuo file attuale) ok 
-└─ backend/
+│     └─ home.php                   ← Vista fallback con istruzioni per developer
+│
+├─ frontend/                        ← Frontend React (JSX) + Tailwind CSS + Vite
+│  ├─ src/
+│  │  ├─ components/
+│  │  │  ├─ Header.jsx              ← Banner istituto e titolo EcosiStem
+│  │  │  ├─ InteractiveHero.jsx     ← Diagramma interattivo con visualizzatore fullscreen
+│  │  │  ├─ FullscreenModal.jsx     ← Modale accessibile con tasto ESC
+│  │  │  ├─ SearchBar.jsx           ← Barra di ricerca istantanea con conteggio
+│  │  │  ├─ CategoryGrid.jsx        ← Griglia delle 6 macro-aree STEM
+│  │  │  ├─ CategoryCard.jsx        ← Scheda macro-area con colori STEM dedicati
+│  │  │  ├─ TermGrid.jsx            ← Griglia schede didattiche filtrate
+│  │  │  └─ TermCard.jsx            ← Scheda strumento/attività (tag scuola, immagine, link PDF)
+│  │  ├─ constants/
+│  │  │  └─ categories.js           ← Configurazione macro-aree, palette colori e icone
+│  │  ├─ utils/
+│  │  │  └─ assetHelper.js          ← Risoluzione normalizzata URL per immagini e PDF
+│  │  ├─ App.jsx                    ← Componente root con gestione stato e API fetch
+│  │  ├─ main.jsx                   ← Entry point React
+│  │  └─ index.css                  ← Direttive Tailwind CSS
+│  ├─ package.json                  ← Dipendenze React, Tailwind, Lucide Icons, Vite
+│  ├─ vite.config.js                ← Configurazione Vite con outDir in public/dist
+│  ├─ tailwind.config.js            ← Estensione tema STEM e animazioni
+│  ├─ postcss.config.js             ← Pipeline PostCSS
+│  └─ index.html                    ← Template HTML Vite
+│
+└─ index.html                       ← Reindirizzamento rapido root verso public/dist/index.html

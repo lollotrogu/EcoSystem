@@ -1,0 +1,26 @@
+# Node dependencies
+node_modules/
+frontend/node_modules/
+.npm
+package-lock.json
+
+# Build outputs (se si desidera rigenerarli al volo, o si possono includere in public/dist se richiesto per hosting statico)
+.vite/
+dist/
+!public/dist/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.suo
+*.user
+
+# Environment and logs
+*.log
+.env
+.env.local
