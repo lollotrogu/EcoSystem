@@ -1,27 +1,38 @@
-import React from 'react';
-import { Sparkles, School } from 'lucide-react';
+import React, { useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Sparkles, School, Orbit, Bot } from 'lucide-react';
+import { celebrate } from './MotionKit';
+import { StarBurst, PlayfulHint } from './PlayfulEffects';
 
 export default function Header() {
+  const [burst, setBurst] = useState(0);
+  const [hello, setHello] = useState(0);
+  const reduced = useReducedMotion();
+  const messages = ['Ciao! Scegli un’area qui sotto.', 'Ti piacciono i robot? Prova Robotica!', 'Vuoi creare un gioco? Prova Coding!', 'Cerca uno strumento che conosci!'];
   return (
-    <header className="relative overflow-hidden bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 text-white py-10 px-6 sm:px-10 text-center shadow-lg">
-      {/* Elementi grafici di sfondo */}
-      <div className="absolute top-0 left-0 -translate-x-12 -translate-y-12 w-48 h-48 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 translate-x-12 translate-y-12 w-56 h-56 bg-emerald-400/20 rounded-full blur-2xl pointer-events-none" />
-
-      <div className="relative max-w-4xl mx-auto space-y-3">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-sm text-emerald-50 text-xs sm:text-sm font-medium tracking-wide">
-          <School className="w-4 h-4" />
-          <span>Istituto Comprensivo “U. Amaldi” - Cadeo (PC)</span>
+    <header className="portal-header">
+      <div>
+        <div className="portal-title">
+          <Orbit size={40} aria-hidden="true" />
+          <h1>EcosiStem</h1>
+          <motion.button
+            aria-label="Fai brillare le stelle"
+            className="spark-button"
+            whileHover={{ rotate: 15, scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={event => { setBurst(value => value + 1); celebrate(event, '#8c52ff'); }}
+          >
+            <Sparkles size={30} /><StarBurst burst={burst} />
+          </motion.button>
         </div>
-
-        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight drop-shadow-sm flex items-center justify-center gap-3">
-          <span>EcosiStem</span>
-          <Sparkles className="w-8 h-8 text-yellow-300 animate-pulse" />
-        </h1>
-
-        <p className="text-base sm:text-xl text-emerald-100 font-light max-w-2xl mx-auto">
-          Esplora il nostro curricolo digitale e le attività STEM
-        </p>
+        <p>Attività e strumenti per imparare le STEM</p>
+      </div>
+      <div className="header-tools">
+        <div className="robot-helper"><motion.button className="robot-button" aria-label="Chiedi un suggerimento al robot" onClick={() => setHello(value => value + 1)} whileHover={reduced ? {} : { rotate: [0, -12, 12, 0], y: -3 }} whileTap={{ scale: 0.85 }}><Bot size={32} /><span className="robot-wave" aria-hidden="true">✦</span></motion.button><PlayfulHint message={hello ? messages[(hello - 1) % messages.length] : null} /></div>
+      <div className="school-badge">
+        <School size={21} aria-hidden="true" />
+        <span>I.C. “U. Amaldi” · Cadeo (PC)</span>
+      </div>
       </div>
     </header>
   );

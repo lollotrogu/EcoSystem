@@ -6,6 +6,7 @@ import CategoryGrid from './components/CategoryGrid';
 import TermGrid from './components/TermGrid';
 import { CATEGORIES } from './constants/categories';
 import { Loader2, RefreshCw } from 'lucide-react';
+import { MotionConfig } from 'framer-motion';
 
 export default function App() {
   const [dataset, setDataset] = useState(null);
@@ -94,8 +95,10 @@ export default function App() {
   }, [dataset, selectedCategory, searchQuery]);
 
   return (
-    <div className="min-h-screen py-6 sm:py-10 px-2 sm:px-6 flex justify-center">
-      <main className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 flex flex-col">
+    <MotionConfig reducedMotion="user">
+    <div className="app-shell">
+      <a className="skip-link" href="#esplora">Vai alla ricerca delle attività</a>
+      <main className="portal-main">
         {/* Banner Istituzionale e Titolo */}
         <Header />
 
@@ -107,7 +110,8 @@ export default function App() {
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           totalResults={filteredItems.length}
-          isSearching={Boolean(searchQuery.trim())}
+          selectedCategory={selectedCategory}
+          loading={loading}
         />
 
         {/* Stato di caricamento o errore */}
@@ -160,6 +164,6 @@ export default function App() {
         </footer>
       </main>
     </div>
+    </MotionConfig>
   );
 }
-
