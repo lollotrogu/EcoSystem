@@ -6,7 +6,7 @@
     },
     {
       "title": "Reazioni a catena",
-      "image": "/assets/img/reazione_a_catena.png"
+      "image": "/assets/img/Reazione_a_catena.png"
     },
     {
       "title": "Circuiti",
@@ -22,7 +22,7 @@
     },
     {
       "title": "Micro:bit",
-      "image": "/assets/img/microbit.png"
+      "image": "/assets/img/Microbit.png"
     },
     {
       "title": "Arduino",
@@ -40,7 +40,7 @@
     },
     {
       "title": "Octostudio",
-      "image": "/assets/img/octostudio.png"
+      "image": "/assets/img/OCTOSTUDIO.png"
     },
     {
       "title": "Scratch",
@@ -58,7 +58,7 @@
     },
     {
       "title": "Bee-bot",
-      "image": "/assets/img/beebot.png"
+      "image": "/assets/img/Beebot.png"
     },
     {
       "title": "Ozobot",
@@ -66,7 +66,7 @@
     },
     {
       "title": "Thymio",
-      "image": "/assets/img/thymio.png"
+      "image": "/assets/img/Thymio.png"
     },
     {
       "title": "Lego WeDo",
@@ -96,7 +96,7 @@
     },
     {
       "title": "Paesaggi digitali",
-      "image": "/assets/img/paesaggi_digitali.jpg"
+      "image": "/assets/img/Paesaggi_digitali.jpg"
     },
     {
       "title": "Stop motion",
@@ -122,7 +122,7 @@
   "orange": [
     {
       "title": "Doodle 3D",
-      "image": "/assets/img/doodle3d.webp"
+      "image": "/assets/img/Doodle3d.webp"
     },
     {
       "title": "Tinkercad",
@@ -152,7 +152,7 @@
     },
     {
       "title": "Intelligenza Artificiale",
-      "image": "/assets/img/ai.png"
+      "image": "/assets/img/AI.png"
     }
   ]
 }

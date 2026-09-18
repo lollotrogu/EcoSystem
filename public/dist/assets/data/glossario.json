@@ -18,7 +18,7 @@
       "title": "Reazioni a catena",
       "description": "Gli studenti realizzano una pista verticale per le biglie inserendo sequenze di eventi con oggetti di uso quotidiano. Si esplorano causalità, gravità, elettricità, attrito, accelerazione. Attività che valorizza cooperazione, pensiero ingegneristico e inventiva in uno scenario giocoso e sfidante.",
       "link": "",
-      "image": "/assets/img/reazione_a_catena.png",
+      "image": "/assets/img/Reazione_a_catena.png",
       "active": true,
       "ageTags": [
         "infanzia",
@@ -68,7 +68,7 @@
       "title": "Micro:bit",
       "description": "L’attività con micro:bit avvicina gli studenti alla programmazione e all’elettronica in modo semplice e creativo. Questa scheda tascabile, dotata di LED, pulsanti, sensori e connessione wireless, può essere programmata con ambienti visivi a blocchi o in linguaggi testuali. I ragazzi realizzano giochi, strumenti interattivi o esperimenti scientifici, sviluppando logica computazionale, problem solving e pensiero progettuale in chiave divertente e sperimentale.",
       "link": "/assets/pdf/Microbit.pdf",
-      "image": "/assets/img/microbit.png",
+      "image": "/assets/img/Microbit.png",
       "active": true,
       "ageTags": [
         "primaria",
@@ -116,7 +116,7 @@
       "title": "Octostudio",
       "description": "OctoStudio è un’app del MIT progettata per introdurre bambini e ragazzi alla programmazione creativa. Permette di creare storie, giochi e animazioni usando blocchi di codice visuale, immagini, suoni e movimento. Favorisce il pensiero computazionale, la collaborazione e l’espressione personale in modo intuitivo e accessibile, anche su dispositivi mobili.",
       "link": "",
-      "image": "/assets/img/octostudio.png",
+      "image": "/assets/img/OCTOSTUDIO.png",
       "active": true,
       "ageTags": [
         "primaria",
@@ -165,7 +165,7 @@
       "title": "Bee-bot",
       "description": "Robot a forma di ape programmato con tasti per muoversi su griglia: sequenza, direzione e orientamento spaziale.",
       "link": "",
-      "image": "/assets/img/beebot.png",
+      "image": "/assets/img/Beebot.png",
       "active": true,
       "ageTags": [
         "infanzia",
@@ -188,7 +188,7 @@
       "title": "Thymio",
       "description": "Thymio è un robot educativo che avvicina i ragazzi alla robotica e alla programmazione in modo progressivo. È dotato di sensori, luci e motori, e può essere programmato con un ambiente a blocchi o con linguaggi testuali più avanzati. Attraverso progetti e sfide, gli studenti imparano a creare comportamenti complessi, sviluppando logica, pensiero progettuale e problem solving in chiave ludica e interattiva.",
       "link": "/assets/pdf/Thymio.pdf",
-      "image": "/assets/img/thymio.png",
+      "image": "/assets/img/Thymio.png",
       "active": true,
       "ageTags": [
         "primaria",
@@ -271,7 +271,7 @@
       "title": "Paesaggi digitali",
       "description": "Disegno digitale su tablet per progettare ambienti e scenari: composizione, colore e prospettiva.",
       "link": "",
-      "image": "/assets/img/paesaggi_digitali.jpg",
+      "image": "/assets/img/Paesaggi_digitali.jpg",
       "active": true,
       "ageTags": [
         "infanzia",
@@ -347,7 +347,7 @@
       "title": "Doodle 3D",
       "description": "Doodle3D è un dispositivo wi-fi che collega tablet, smartphone, laptop o Lim alla stampante 3D. Basta collegare la stampante alla porta USB del Doodle3D Box e connettersi alla rete wi-fi per disegnare e stampare in 3D tramite browser. Con un’interfaccia intuitiva, gli studenti possono trasformare un disegno in una forma tridimensionale premendo “stampa”, stimolando creatività, logica, collaborazione e inclusione.",
       "link": "",
-      "image": "/assets/img/doodle3d.webp",
+      "image": "/assets/img/Doodle3d.webp",
       "active": true,
       "ageTags": [
         "infanzia",
@@ -433,7 +433,7 @@
       "title": "Intelligenza Artificiale",
       "description": "",
       "link": "",
-      "image": "/assets/img/ai.png",
+      "image": "/assets/img/AI.png",
       "active": true,
       "ageTags": [
         "primaria",
