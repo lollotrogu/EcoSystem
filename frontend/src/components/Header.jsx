@@ -28,11 +28,26 @@ export default function Header() {
         <p>Attività e strumenti per imparare le STEM</p>
       </div>
       <div className="header-tools">
-        <div className="robot-helper"><motion.button className="robot-button" aria-label="Chiedi un suggerimento al robot" onClick={() => setHello(value => value + 1)} whileHover={reduced ? {} : { rotate: [0, -12, 12, 0], y: -3 }} whileTap={{ scale: 0.85 }}><Bot size={32} /><span className="robot-wave" aria-hidden="true">✦</span></motion.button><PlayfulHint message={hello ? messages[(hello - 1) % messages.length] : null} /></div>
-      <div className="school-badge">
-        <School size={21} aria-hidden="true" />
-        <span>I.C. “U. Amaldi” · Cadeo (PC)</span>
-      </div>
+        <div className="robot-helper">
+          <motion.button
+            className="robot-button"
+            aria-label="Chiedi un suggerimento al robot"
+            onClick={() => setHello((value) => value + 1)}
+            whileHover={reduced ? {} : { rotate: [0, -12, 12, 0], y: -3 }}
+            whileTap={{ scale: 0.85 }}
+          >
+            <Bot size={32} />
+            <span className="robot-wave" aria-hidden="true">✦</span>
+          </motion.button>
+          <PlayfulHint
+            message={hello ? messages[(hello - 1) % messages.length] : null}
+            onClose={() => setHello(0)}
+          />
+        </div>
+        <div className="school-badge">
+          <School size={21} aria-hidden="true" />
+          <span>I.C. “U. Amaldi” · Cadeo (PC)</span>
+        </div>
       </div>
     </header>
   );

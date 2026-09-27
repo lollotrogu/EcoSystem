@@ -16,10 +16,43 @@ export function StarBurst({ burst, color = '#8c52ff' }) {
   </span>;
 }
 
-export function PlayfulHint({ message }) {
-  return <AnimatePresence mode="wait">
-    {message && <motion.span key={message} className="playful-hint" role="status"
-      initial={{ opacity: 0, y: 6, scale: 0.9 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, y: -4 }} transition={{ type: 'spring', stiffness: 350, damping: 22 }}>{message}</motion.span>}
-  </AnimatePresence>;
+export function PlayfulHint({ message, onClose }) {
+  React.useEffect(() => {
+    if (!message) return;
+    const timer = setTimeout(() => {
+      if (onClose) onClose();
+    }, 7000);
+    return () => clearTimeout(timer);
+  }, [message, onClose]);
+
+  return (
+    <AnimatePresence mode="wait">
+      {message && (
+        <motion.div
+          key={message}
+          className="playful-hint"
+          role="status"
+          initial={{ opacity: 0, y: 6, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -4, scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 350, damping: 24 }}
+        >
+          <span className="hint-text">{message}</span>
+          {onClose && (
+            <button
+              type="button"
+              className="hint-close-button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onClose();
+              }}
+              aria-label="Chiudi suggerimento"
+            >
+              ×
+            </button>
+          )}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
