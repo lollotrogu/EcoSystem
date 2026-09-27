@@ -1,0 +1,10 @@
+{
+  "name": "ecosistem",
+  "private": true,
+  "description": "Portale didattico STEM EcosiStem per IC U. Amaldi",
+  "scripts": {
+    "start": "php -S localhost:8000 -t public",
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build"
+  }
+}
