@@ -33,7 +33,12 @@ export default defineConfig(({ mode }) => {
             fs.cpSync(publicAssets, distAssets, { recursive: true });
           }
 
-          // 2. Copia distAssets completo (JS, CSS, img, pdf, data) nella root per deploy branch GitHub Pages
+          // 2. Copia i bundle generati anche in public/assets (per il server PHP con docroot in public/)
+          if (fs.existsSync(distAssets)) {
+            fs.cpSync(distAssets, publicAssets, { recursive: true });
+          }
+
+          // 3. Copia distAssets completo nella root per deploy branch GitHub Pages
           if (fs.existsSync(distAssets)) {
             fs.cpSync(distAssets, rootAssets, { recursive: true });
           }
@@ -43,7 +48,7 @@ export default defineConfig(({ mode }) => {
           }
           fs.writeFileSync(rootNoJekyll, '');
 
-          // 3. Genera pages-dist per eventuale deploy da GitHub Actions
+          // 4. Genera pages-dist per eventuale deploy da GitHub Actions
           if (!fs.existsSync(pagesDist)) fs.mkdirSync(pagesDist, { recursive: true });
           fs.cpSync(distDir, pagesDist, { recursive: true });
           fs.writeFileSync(path.resolve(pagesDist, '.nojekyll'), '');

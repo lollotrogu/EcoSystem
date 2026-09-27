@@ -42,19 +42,55 @@ $router->get('/api/health', [ApiController::class, 'health']);
 $router->get('/api/glossario', [ApiController::class, 'glossario']);
 
 // =======================
-// GESTIONE FALLBACK 404
+// =======================
+// GESTIONE FALLBACK 404 & SPA
 // =======================
 $router->fallback(function (): void {
     $uri = $_SERVER['REQUEST_URI'] ?? '/';
     $path = parse_url($uri, PHP_URL_PATH) ?: '/';
 
-    // Se la richiesta è per un endpoint API, restituisci JSON 404
+    // 1. Se la richiesta è per un endpoint API, restituisci JSON 404
     if (str_starts_with($path, '/api/')) {
         Response::error('Endpoint API non trovato.', 404);
         return;
     }
 
-    // Per richieste web, se esiste la build React, supporta il routing SPA
+    // 2. Se è una richiesta di asset statico (js, css, img, pdf, ecc.), servilo con il corretto MIME type
+    if (preg_match('/\.(?:js|css|png|jpg|jpeg|gif|webp|svg|ico|pdf|json|woff2?|ttf|map)$/i', $path)) {
+        $candidates = [
+            __DIR__ . $path,
+            __DIR__ . '/dist' . $path,
+            __DIR__ . '/dist/assets/' . basename($path),
+            __DIR__ . '/assets/' . basename($path),
+        ];
+
+        $mimeTypes = [
+            'js' => 'application/javascript',
+            'css' => 'text/css; charset=UTF-8',
+            'json' => 'application/json; charset=UTF-8',
+            'png' => 'image/png',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'webp' => 'image/webp',
+            'svg' => 'image/svg+xml',
+            'ico' => 'image/x-icon',
+            'pdf' => 'application/pdf',
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (is_file($candidate)) {
+                $ext = strtolower(pathinfo($candidate, PATHINFO_EXTENSION));
+                header('Content-Type: ' . ($mimeTypes[$ext] ?? 'application/octet-stream'));
+                readfile($candidate);
+                exit;
+            }
+        }
+
+        http_response_code(404);
+        exit;
+    }
+
+    // 3. Per richieste web SPA (navigazione), servi la Single Page Application React
     $distIndex = __DIR__ . '/dist/index.html';
     if (is_file($distIndex)) {
         header('Content-Type: text/html; charset=utf-8');
