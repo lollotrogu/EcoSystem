@@ -8,7 +8,7 @@ export default function TermGrid({ items, selectedCategory, onClearFilter, searc
   const [image, setImage] = useState(null), reduced = useReducedMotion();
   const close = useCallback(() => setImage(null), []);
   const active = CATEGORY_MAP[selectedCategory];
-  return <section className="page-section term-section" aria-labelledby="activities-title">
+  return <section id="attivita" className="page-section term-section scroll-mt-6" aria-labelledby="activities-title">
     <div className="section-heading"><div><h2 id="activities-title">{active?.title || 'Tutte le attività'}<span className="total-pill">{items.length}</span></h2></div>{(selectedCategory || searchQuery) && <button className="text-button" onClick={onClearFilter}>Azzera filtri ×</button>}</div>
     <motion.div layout={!reduced} className="term-grid" initial="hidden" animate="visible" variants={{ visible: { transition: { staggerChildren: reduced ? 0 : 0.05 } } }}>
       <AnimatePresence mode="popLayout">{items.map(({ item, colorKey }) => <TermCard key={colorKey + '-' + (item.id || item.title)} item={item} colorKey={colorKey} onOpenImageFullscreen={(src, alt) => setImage({ src, alt })} />)}</AnimatePresence>
