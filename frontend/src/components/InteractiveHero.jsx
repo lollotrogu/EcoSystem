@@ -20,7 +20,7 @@ export default function InteractiveHero() {
         <div className="orbit-border" aria-hidden="true" />
         <div className="map-surface">
           <div className="map-toolbar">
-            <h2>La mappa STEM</h2>
+            <h2>Esplora la mappa</h2>
             <motion.button {...magnet} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.95 }}
               onClick={() => setIsFullscreen(true)} aria-label="Ingrandisci la mappa">
               <Maximize2 size={22} /><span>Ingrandisci</span>

@@ -175,7 +175,7 @@ export default function App() {
         {/* Footer */}
         <footer className="mt-auto border-t border-slate-100 py-6 px-6 text-center text-xs text-slate-500 bg-slate-50">
           <p className="font-medium">
-            EcosiStem — Istituto Comprensivo “U. Amaldi” di Cadeo (PC)
+            EcosiSTEM — Istituto Comprensivo “U. Amaldi” di Cadeo (PC)
           </p>
           <p className="mt-1 text-slate-400">
             Portale didattico per il curricolo digitale e le materie STEM nella scuola secondaria di primo grado.

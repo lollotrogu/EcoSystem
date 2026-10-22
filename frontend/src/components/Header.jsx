@@ -14,7 +14,7 @@ export default function Header() {
       <div>
         <div className="portal-title">
           <Orbit size={40} aria-hidden="true" />
-          <h1>EcosiStem</h1>
+          <h1>EcosiSTEM</h1>
           <motion.button
             aria-label="Fai brillare le stelle"
             className="spark-button"
@@ -25,7 +25,7 @@ export default function Header() {
             <Sparkles size={30} /><StarBurst burst={burst} />
           </motion.button>
         </div>
-        <p>Attività e strumenti per imparare le STEM</p>
+        <p>Attività e strumenti per lo sviluppo del curricolo digitale e STEM</p>
       </div>
       <div className="header-tools">
         <div className="robot-helper">

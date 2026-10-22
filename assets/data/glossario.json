@@ -4,7 +4,7 @@
       "id": "red_0",
       "title": "Automata",
       "description": "L’attività propone di creare sculture meccaniche in cartone che si muovono grazie a camme, leve e ingranaggi semplici. Gli studenti progettano una storia o un personaggio e costruiscono l’automa decorandolo liberamente. L’esperienza unisce arte, manualità e scienza, stimolando creatività, esplorazione e comprensione dei principi meccanici in modo divertente e coinvolgente.",
-      "link": "",
+      "link": "/assets/pdf/Automata.pdf",
       "image": "/assets/img/automata.png",
       "active": true,
       "ageTags": [
@@ -17,7 +17,7 @@
       "id": "red_1",
       "title": "Reazioni a catena",
       "description": "Gli studenti realizzano una pista verticale per le biglie inserendo sequenze di eventi con oggetti di uso quotidiano. Si esplorano causalità, gravità, elettricità, attrito, accelerazione. Attività che valorizza cooperazione, pensiero ingegneristico e inventiva in uno scenario giocoso e sfidante.",
-      "link": "",
+      "link": "/assets/pdf/Reazione_a_catena.pdf",
       "image": "/assets/img/Reazione_a_catena.png",
       "active": true,
       "ageTags": [
@@ -89,6 +89,18 @@
   ],
   "purple": [
     {
+      "id": "purple_coding_unplugged",
+      "title": "Coding unplugged",
+      "description": "L’attività introduce ai concetti base della programmazione senza l’uso di computer. Attraverso giochi, schede, percorsi e attività collaborative, i ragazzi apprendono logica, sequenze, e risoluzione di problemi in modo concreto e divertente. L’esperienza favorisce il pensiero computazionale e la creatività, preparando i bambini ai futuri progetti digitali in modo giocoso e accessibile.",
+      "link": "/assets/pdf/Coding_Unplugged.pdf",
+      "image": "/assets/img/coding unplugged.webp",
+      "active": true,
+      "ageTags": [
+        "infanzia",
+        "primaria"
+      ]
+    },
+    {
       "id": "purple_1",
       "title": "Cody Roby",
       "description": "I bambini sperimentano il coding tramite un gioco da tavolo in cui devono programmare percorsi e movimenti su una griglia usando carte comandi. Senza robot reale, i ragazzi sperimentano sequenze, algoritmi e logica in modo concreto e divertente, sviluppando pensiero computazionale, problem solving e collaborazione mentre risolvono sfide stimolanti.",
@@ -152,7 +164,7 @@
       "id": "blue_0",
       "title": "Cubetto",
       "description": "Robot in legno programmato con blocchi fisici: sequenze, funzioni e cicli senza schermi. Sviluppa logica e creatività.",
-      "link": "",
+      "link": "/assets/pdf/Cubetto.pdf",
       "image": "/assets/img/cubetto.png",
       "active": true,
       "ageTags": [
@@ -164,7 +176,7 @@
       "id": "blue_1",
       "title": "Bee-bot",
       "description": "Robot a forma di ape programmato con tasti per muoversi su griglia: sequenza, direzione e orientamento spaziale.",
-      "link": "",
+      "link": "/assets/pdf/Beebot.pdf",
       "image": "/assets/img/Beebot.png",
       "active": true,
       "ageTags": [
@@ -199,7 +211,7 @@
       "id": "blue_4",
       "title": "Lego WeDo",
       "description": "Robotica entry-level con mattoncini, sensori e software a blocchi: costruire e programmare modelli animati.",
-      "link": "",
+      "link": "/assets/pdf/Lego_WeDo.pdf",
       "image": "/assets/img/lego_wedo.png",
       "active": true,
       "ageTags": [
@@ -233,7 +245,7 @@
       "id": "blue_7",
       "title": "mBot",
       "description": "Robot educativo programmabile a blocchi (Scratch). Esplorazione di sensori e motori in modo semplice e divertente.",
-      "link": "",
+      "link": "/assets/pdf/Mbot.pdf",
       "image": "/assets/img/mbot.png",
       "active": true,
       "ageTags": [
@@ -257,7 +269,7 @@
       "id": "green_0",
       "title": "Tavoli luminosi",
       "description": "Esplorazione sensoriale e creativa della luce e del colore con materiali trasparenti. Pattern, ombre, mescolanze.",
-      "link": "",
+      "link": "/assets/pdf/Tavoli_Luminosi.pdf",
       "image": "/assets/img/tavolo_luminoso.jpg",
       "active": true,
       "ageTags": [
@@ -269,8 +281,8 @@
     {
       "id": "green_1",
       "title": "Paesaggi digitali",
-      "description": "Disegno digitale su tablet per progettare ambienti e scenari: composizione, colore e prospettiva.",
-      "link": "",
+      "description": "Monitor, webcam, tavolette grafiche, microscopi digitali, oggetti e materiali diversi, costituiscono piccoli set cinematografici che possono ricreare, ingrandire, proiettare immagini cariche di visionarietá. Si porta dentro il mondo lá fuori: paesaggi, piante, fiori, insetti, particolari colti e fissati con la macchina fotografica digitale diventano lo sfondo per creare ambienti , decostruirli, ricostruirli, reinventarli e nei quali immergersi.",
+      "link": "/assets/pdf/Paesaggi_Digitali.pdf",
       "image": "/assets/img/Paesaggi_digitali.jpg",
       "active": true,
       "ageTags": [
@@ -283,7 +295,7 @@
       "id": "green_2",
       "title": "Stop motion",
       "description": "E’ una tecnica di animazione che permette di creare brevi video a partire da una sequenza di fotografie. I bambini possono realizzarla facilmente con materiali semplici come carta o plastilina, sviluppando creatività, attenzione, coordinazione e capacità narrative attraverso un approccio ludico e sperimentale.",
-      "link": "",
+      "link": "/assets/pdf/Stop_Motion.pdf",
       "image": "/assets/img/stop_motion.jpeg",
       "active": true,
       "ageTags": [
@@ -309,7 +321,7 @@
       "id": "green_4",
       "title": "Boxio",
       "description": "Laboratorio audio portatile con cuffie wireless e canali differenziati; utile anche per BES e test INVALSI.",
-      "link": "",
+      "link": "/assets/pdf/Boxio.pdf",
       "image": "/assets/img/boxio.png",
       "active": true,
       "ageTags": [
@@ -333,7 +345,7 @@
       "id": "green_6",
       "title": "Visori V/R",
       "description": "Esplorazioni immersive in 3D (corpo umano, musei, spazio). Apprendimento multisensoriale e partecipato.",
-      "link": "",
+      "link": "/assets/pdf/Visori_VR.pdf",
       "image": "/assets/img/visori_vr.png",
       "active": true,
       "ageTags": [
@@ -346,7 +358,7 @@
       "id": "orange_0",
       "title": "Doodle 3D",
       "description": "Doodle3D è un dispositivo wi-fi che collega tablet, smartphone, laptop o Lim alla stampante 3D. Basta collegare la stampante alla porta USB del Doodle3D Box e connettersi alla rete wi-fi per disegnare e stampare in 3D tramite browser. Con un’interfaccia intuitiva, gli studenti possono trasformare un disegno in una forma tridimensionale premendo “stampa”, stimolando creatività, logica, collaborazione e inclusione.",
-      "link": "",
+      "link": "/assets/pdf/Doodle_3D.pdf",
       "image": "/assets/img/Doodle3d.webp",
       "active": true,
       "ageTags": [
@@ -358,7 +370,7 @@
       "id": "orange_1",
       "title": "Tinkercad",
       "description": "Software 3D accessibile: combinare forme semplici per oggetti e prototipi. Creatività e pensiero ingegneristico.",
-      "link": "",
+      "link": "/assets/pdf/Tinkercad.pdf",
       "image": "/assets/img/tinkercad.png",
       "active": true,
       "ageTags": [
@@ -370,7 +382,7 @@
       "id": "orange_2",
       "title": "Cricut",
       "description": "Taglio digitale su carta/vinile/tessuto: progettazione e realizzazione di forme precise con software intuitivo.",
-      "link": "",
+      "link": "/assets/pdf/Cricut.pdf",
       "image": "/assets/img/cricut.png",
       "active": true,
       "ageTags": [
@@ -382,7 +394,7 @@
       "id": "orange_3",
       "title": "Lasercut",
       "description": "Taglio/incisione laser di modelli da legno, acrilico e cartone: design digitale e precisione professionale.",
-      "link": "",
+      "link": "/assets/pdf/Lasercut.pdf",
       "image": "/assets/img/lasercut.png",
       "active": true,
       "ageTags": [
@@ -420,7 +432,7 @@
       "id": "yellow_1",
       "title": "Pillole di Chromebook",
       "description": "Uso di dispositivi leggeri e basati su cloud per accedere a risorse didattiche e piattaforme collaborative. Sviluppo di competenze digitali e autonomia.",
-      "link": "",
+      "link": "/assets/pdf/Pillole_Chromebook.pdf",
       "image": "/assets/img/chromebook.png",
       "active": true,
       "ageTags": [

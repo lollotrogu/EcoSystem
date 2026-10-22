@@ -2,11 +2,13 @@
   "red": [
     {
       "title": "Automata",
-      "image": "/assets/img/automata.png"
+      "image": "/assets/img/automata.png",
+      "link": "/assets/pdf/Automata.pdf"
     },
     {
       "title": "Reazioni a catena",
-      "image": "/assets/img/Reazione_a_catena.png"
+      "image": "/assets/img/Reazione_a_catena.png",
+      "link": "/assets/pdf/Reazione_a_catena.pdf"
     },
     {
       "title": "Circuiti",
@@ -31,6 +33,18 @@
   ],
   "purple": [
     {
+      "id": "purple_coding_unplugged",
+      "title": "Coding unplugged",
+      "description": "L’attività introduce ai concetti base della programmazione senza l’uso di computer. Attraverso giochi, schede, percorsi e attività collaborative, i ragazzi apprendono logica, sequenze, e risoluzione di problemi in modo concreto e divertente. L’esperienza favorisce il pensiero computazionale e la creatività, preparando i bambini ai futuri progetti digitali in modo giocoso e accessibile.",
+      "link": "/assets/pdf/Coding_Unplugged.pdf",
+      "image": "/assets/img/coding unplugged.webp",
+      "active": true,
+      "ageTags": [
+        "infanzia",
+        "primaria"
+      ]
+    },
+    {
       "title": "Cody Roby",
       "image": "/assets/img/cody_roby.png"
     },
@@ -54,11 +68,13 @@
   "blue": [
     {
       "title": "Cubetto",
-      "image": "/assets/img/cubetto.png"
+      "image": "/assets/img/cubetto.png",
+      "link": "/assets/pdf/Cubetto.pdf"
     },
     {
       "title": "Bee-bot",
-      "image": "/assets/img/Beebot.png"
+      "image": "/assets/img/Beebot.png",
+      "link": "/assets/pdf/Beebot.pdf"
     },
     {
       "title": "Ozobot",
@@ -70,11 +86,13 @@
     },
     {
       "title": "Lego WeDo",
-      "image": "/assets/img/lego_wedo.png"
+      "image": "/assets/img/lego_wedo.png",
+      "link": "/assets/pdf/Lego_WeDo.pdf"
     },
     {
       "title": "Lego Spike Prime",
-      "image": "/assets/img/lego_spike.png"
+      "image": "/assets/img/lego_spike.png",
+      "link": "/assets/pdf/Lego_Spike_Prime.pdf"
     },
     {
       "title": "Lego EV3",
@@ -82,7 +100,8 @@
     },
     {
       "title": "mBot",
-      "image": "/assets/img/mbot.png"
+      "image": "/assets/img/mbot.png",
+      "link": "/assets/pdf/Mbot.pdf"
     },
     {
       "title": "Droni",
@@ -92,15 +111,19 @@
   "green": [
     {
       "title": "Tavoli luminosi",
-      "image": "/assets/img/tavolo_luminoso.jpg"
+      "image": "/assets/img/tavolo_luminoso.jpg",
+      "link": "/assets/pdf/Tavoli_Luminosi.pdf"
     },
     {
       "title": "Paesaggi digitali",
-      "image": "/assets/img/Paesaggi_digitali.jpg"
+      "image": "/assets/img/Paesaggi_digitali.jpg",
+      "link": "/assets/pdf/Paesaggi_Digitali.pdf",
+      "description": "Monitor, webcam, tavolette grafiche, microscopi digitali, oggetti e materiali diversi, costituiscono piccoli set cinematografici che possono ricreare, ingrandire, proiettare immagini cariche di visionarietá. Si porta dentro il mondo lá fuori: paesaggi, piante, fiori, insetti, particolari colti e fissati con la macchina fotografica digitale diventano lo sfondo per creare ambienti , decostruirli, ricostruirli, reinventarli e nei quali immergersi."
     },
     {
       "title": "Stop motion",
-      "image": "/assets/img/stop_motion.jpeg"
+      "image": "/assets/img/stop_motion.jpeg",
+      "link": "/assets/pdf/Stop_Motion.pdf"
     },
     {
       "title": "Teatro ombre",
@@ -108,7 +131,8 @@
     },
     {
       "title": "Boxio",
-      "image": "/assets/img/boxio.png"
+      "image": "/assets/img/boxio.png",
+      "link": "/assets/pdf/Boxio.pdf"
     },
     {
       "title": "Mozaik",
@@ -116,25 +140,30 @@
     },
     {
       "title": "Visori V/R",
-      "image": "/assets/img/visori_vr.png"
+      "image": "/assets/img/visori_vr.png",
+      "link": "/assets/pdf/Visori_VR.pdf"
     }
   ],
   "orange": [
     {
       "title": "Doodle 3D",
-      "image": "/assets/img/Doodle3d.webp"
+      "image": "/assets/img/Doodle3d.webp",
+      "link": "/assets/pdf/Doodle_3D.pdf"
     },
     {
       "title": "Tinkercad",
-      "image": "/assets/img/tinkercad.png"
+      "image": "/assets/img/tinkercad.png",
+      "link": "/assets/pdf/Tinkercad.pdf"
     },
     {
       "title": "Cricut",
-      "image": "/assets/img/cricut.png"
+      "image": "/assets/img/cricut.png",
+      "link": "/assets/pdf/Cricut.pdf"
     },
     {
       "title": "Lasercut",
-      "image": "/assets/img/lasercut.png"
+      "image": "/assets/img/lasercut.png",
+      "link": "/assets/pdf/Lasercut.pdf"
     },
     {
       "title": "Stampa 3D",
@@ -148,7 +177,8 @@
     },
     {
       "title": "Pillole di Chromebook",
-      "image": "/assets/img/chromebook.png"
+      "image": "/assets/img/chromebook.png",
+      "link": "/assets/pdf/Pillole_Chromebook.pdf"
     },
     {
       "title": "Intelligenza Artificiale",
