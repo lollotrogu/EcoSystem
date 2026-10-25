@@ -1,7 +1,7 @@
 @echo off
-title EcosiStem - Portale Didattico STEM
+title EcosiSTEM - Portale Didattico STEM
 echo ========================================================
-echo          Avvio Portale Didattico EcosiStem
+echo          Avvio Portale Didattico EcosiSTEM
 echo ========================================================
 echo Server PHP locale in esecuzione su http://localhost:8000
 echo Premi CTRL+C per arrestare il server.
