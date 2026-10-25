@@ -125,14 +125,14 @@
     },
     {
       "id": "purple_3",
-      "title": "Octostudio",
+      "title": "OctoStudio",
       "description": "OctoStudio è un’app del MIT progettata per introdurre bambini e ragazzi alla programmazione creativa. Permette di creare storie, giochi e animazioni usando blocchi di codice visuale, immagini, suoni e movimento. Favorisce il pensiero computazionale, la collaborazione e l’espressione personale in modo intuitivo e accessibile, anche su dispositivi mobili.",
-      "link": "",
+      "link": "/assets/pdf/Octostudio.pdf",
       "image": "/assets/img/OCTOSTUDIO.png",
       "active": true,
       "ageTags": [
         "primaria",
-        "secondatia"
+        "secondaria"
       ]
     },
     {
